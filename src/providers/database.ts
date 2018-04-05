@@ -1,3 +1,4 @@
+import { DatabaseMigration } from "./database-migration";
 import { DATABASE_NAME, VERSION } from "./../dependency-injection-definition";
 import { Inject, Injectable } from "@angular/core";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
@@ -12,17 +13,14 @@ export class Database extends BuildableDatabaseManager {
         @Inject(DATABASE_NAME) private _databaseName: string,
         platform: Platform,
         sqlite: SQLite,
-        getMapper: GetMapper
+        getMapper: GetMapper,
+        private _databaseMigration: DatabaseMigration
     ) {
         super(platform, sqlite, getMapper);
     }
 
-    // protected migrationVersion(database: SQLiteObject, version: number): Promise<boolean> {
-    //     return this._migrationDatabase.version(database, version);
-    // }
-
     protected migrationVersion(database: SQLiteObject, version: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this._databaseMigration.version(database, version);
     }
 
     protected databaseName(): string {

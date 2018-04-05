@@ -1,7 +1,11 @@
+import { Injectable } from "@angular/core";
 import { Version } from "./../model/version-model";
 import { Observable } from "rxjs/Observable";
 
-export interface DatabaseMigrationContract {
+@Injectable()
+export class DatabaseMigrationContract {
 
-    to(version: Version): Array<Observable<any>>;
+    public to(version: Version): Array<Observable<any>> {
+        return [];
+    }
 }

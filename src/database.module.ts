@@ -1,23 +1,50 @@
+import { DATABASE_NAME, VERSION } from "./dependency-injection-definition";
 import { Observable } from "rxjs";
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { ModuleWithProviders, NgModule, Provider } from "@angular/core";
 import { DatabaseHelperService } from "./utils/database-helper-service";
+import { DatabaseMigrationContract } from "./providers/database-migration-contract";
+import { DatabaseMigration } from "./providers/database-migration";
+import { Database } from "./providers/database";
 
 @NgModule({
     declarations: [
-        // declare all components that your module uses
-        // MyComponent
     ],
     exports: [
-        // export the component(s) that you want others to be able to use
-        // MyComponent
+        Database
+    ],
+    providers: [
+        DatabaseMigration,
+        Database
     ]
 })
 export class DatabaseModule {
     // https://stackblitz.com/edit/ionic-j3f3ym
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(
+        version: number,
+        databaseName: string,
+        databaseMigrationContract?: new () => DatabaseMigrationContract
+    ): ModuleWithProviders {
+        const providers: Provider[] = [
+            DatabaseHelperService,
+            DatabaseMigrationContract,
+            {
+                provide: VERSION,
+                useValue: version
+            },
+            {
+                provide: DATABASE_NAME,
+                useValue: databaseName
+            }
+        ];
+        if (databaseMigrationContract) {
+            providers.push({
+                provide: DatabaseMigrationContract,
+                useClass: databaseMigrationContract
+            });
+        }
         return {
             ngModule: DatabaseModule,
-            providers: [DatabaseHelperService]
+            providers: providers
         };
     }
 }

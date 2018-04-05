@@ -11,6 +11,7 @@
     "url": "git+https://github.com/fernandocode/ionic-database-builder.git"
   },
   "keywords": [
+    "ionic",
     "orm",
     "database",
     "builder",
@@ -26,8 +27,7 @@
     "ddl",
     "create-table",
     "drop-table",
-    "alter-table",
-    "ionic"
+    "alter-table"
   ],
   "author": "Fernando Leal",
   "license": "MIT",
