@@ -4,7 +4,7 @@ import { Inject, Injectable } from "@angular/core";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 import { Platform } from "ionic-angular";
 import { BuildableDatabaseManager } from "../utils/buildable-database-manager";
-import { GetMapper } from "database-builder";
+import { MappersTableBase } from "../utils/mappers-table-base";
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
@@ -13,7 +13,7 @@ export class Database extends BuildableDatabaseManager {
         @Inject(DATABASE_NAME) private _databaseName: string,
         platform: Platform,
         sqlite: SQLite,
-        getMapper: GetMapper,
+        getMapper: MappersTableBase,
         private _databaseMigration: DatabaseMigration
     ) {
         super(platform, sqlite, getMapper);

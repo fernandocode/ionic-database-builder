@@ -1,18 +1,8 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').",
-  "main": "index.js",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "packagr": "ng-packagr -p ng-package.json",
-    "publish-npm": "npm publish dist"
-  },
+  "main": "bundles/ionic-database-builder.umd.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fernandocode/ionic-database-builder.git"
@@ -48,7 +38,8 @@
     "@ionic-native/sqlite": "^4.6.0",
     "database-builder": "0.0.20",
     "ionic-angular": "^3.9.2",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "tslib": "^1.7.1"
   },
   "devDependencies": {
     "@angular/compiler": "^5.0.0",
@@ -57,5 +48,9 @@
     "tsickle": "^0.27.5",
     "typescript": "2.6.1"
   },
-  "tsconfig": "./tsconfig.json"
+  "tsconfig": "./tsconfig.json",
+  "module": "esm5/ionic-database-builder.js",
+  "es2015": "esm2015/ionic-database-builder.js",
+  "typings": "ionic-database-builder.d.ts",
+  "metadata": "ionic-database-builder.metadata.json"
 }

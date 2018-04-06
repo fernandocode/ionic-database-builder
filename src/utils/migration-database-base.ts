@@ -2,7 +2,8 @@ import { Observer } from "rxjs/Observer";
 import { Alert, App, Config } from "ionic-angular";
 import { SQLiteObject, SQLiteTransaction } from "@ionic-native/sqlite";
 import { Observable } from "rxjs/Observable";
-import * as moment from "moment";
+import * as momentNs from "moment";
+const moment = momentNs;
 
 export abstract class MigrationDatabaseBase {
 

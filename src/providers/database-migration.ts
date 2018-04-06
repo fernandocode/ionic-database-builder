@@ -4,15 +4,16 @@ import { Observable } from "rxjs/Observable";
 import { Alert, App, Config } from "ionic-angular";
 import { Injectable, Optional } from "@angular/core";
 import { SQLiteTransaction } from "@ionic-native/sqlite";
-import { Ddl, GetMapper } from "database-builder";
+import { Ddl } from "database-builder";
 import { MigrationDatabaseBase } from "../utils/migration-database-base";
 import { DatabaseMigrationContract } from "./database-migration-contract";
+import { MappersTableBase } from "../utils/mappers-table-base";
 
 @Injectable()
 export class DatabaseMigration extends MigrationDatabaseBase {
 
     constructor(
-        private _mappersTable: GetMapper,
+        private _mappersTable: MappersTableBase,
         app: App,
         config: Config,
         @Optional() private _databaseMigrationContract: DatabaseMigrationContract

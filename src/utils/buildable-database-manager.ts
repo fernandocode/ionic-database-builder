@@ -1,14 +1,15 @@
 import { DatabaseManager } from "./database-manager";
 import { Platform } from "ionic-angular";
 import { SQLite, SQLiteObject, SQLiteTransaction } from "@ionic-native/sqlite";
-import { Crud, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled, ResultExecuteSql } from "database-builder";
+import { Crud, Ddl, ExecutableBuilder, Query, QueryCompiled, ResultExecuteSql } from "database-builder";
 import { ValueType } from "database-builder/src/core/utils";
+import { MappersTableBase } from "../utils/mappers-table-base";
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
         platform: Platform, sqlite: SQLite,
-        private _getMapper: GetMapper,
+        private _getMapper: MappersTableBase,
         public enableLog: boolean = true
     ) {
         super(platform, sqlite);
