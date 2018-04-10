@@ -17,6 +17,10 @@ npm-debug.log*
 .tmp/
 .versions/
 
+.ng_pkg_build/
+.sonarlint/
+.vscode/
+
 node_modules/
 
 .DS_Store
@@ -25,3 +29,6 @@ UserInterfaceState.xcuserstate
 
 *.js
 *.d.ts
+
+dist.tgz
+dist/

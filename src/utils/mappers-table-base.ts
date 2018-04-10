@@ -1,5 +1,4 @@
 import { GetMapper, MetadataTable } from "database-builder";
-import { Injectable } from "@angular/core";
 
 export abstract class MappersTableBase implements GetMapper {
 

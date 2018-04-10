@@ -1,19 +1,20 @@
+import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
-import { Alert, App, Config } from "ionic-angular";
-import { Injectable, Optional } from "@angular/core";
+import { App, Config } from "ionic-angular";
+import { Injectable, Injector, Optional } from "@angular/core";
 import { SQLiteTransaction } from "@ionic-native/sqlite";
 import { Ddl } from "database-builder";
-import { MigrationDatabaseBase } from "../utils/migration-database-base";
 import { DatabaseMigrationContract } from "./database-migration-contract";
-import { MappersTableBase } from "../utils/mappers-table-base";
+import { DatabaseMigrationBase } from "../utils/database-migration-base";
 
 @Injectable()
-export class DatabaseMigration extends MigrationDatabaseBase {
+export class DatabaseMigration extends DatabaseMigrationBase {
 
     constructor(
-        private _mappersTable: MappersTableBase,
+        private _injector: Injector,
+        private _settings: DatabaseSettingsFactoryContract,
         app: App,
         config: Config,
         @Optional() private _databaseMigrationContract: DatabaseMigrationContract
@@ -23,16 +24,19 @@ export class DatabaseMigration extends MigrationDatabaseBase {
         );
     }
 
-    public databaseReset(transation: SQLiteTransaction, version: Version): Observable<any> {
+    public databaseReset(transation: SQLiteTransaction): Observable<any> {
 
         // tslint:disable-next-line:no-console
         console.info("database reset");
 
         const observablesWait: Array<Observable<any>> = [];
 
+        // const mappers = this._mappersTable;
+        const mappers = this._settings.mapper(this._injector);
+
         // remove dados offline da versão anterior, pois o formato dos dados foi alterado de uma versão para a outra
-        const ddl = new Ddl(transation, this._mappersTable, true);
-        this._mappersTable.forEachMapper((value, key) => {
+        const ddl = new Ddl(transation, mappers, true);
+        mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
                 observablesWait.push(Observable.fromPromise(ddl.drop(value.newable).execute()));
                 observablesWait.push(Observable.fromPromise(ddl.create(value.newable).execute()));
@@ -47,14 +51,16 @@ export class DatabaseMigration extends MigrationDatabaseBase {
 
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
-                const toObservables = this._databaseMigrationContract.to(version);
+                const toObservables = this._databaseMigrationContract.to(
+                    version, transation, this._settings.mapper(this._injector)
+                );
                 if (toObservables && toObservables.length > 0) {
                     observablesNested = observablesNested.concat(toObservables);
                 }
             }
 
             if (observablesNested.length === 0 && version.oldVersion < 1) {
-                observablesNested.push(this.databaseReset(transation, version));
+                observablesNested.push(this.databaseReset(transation));
             }
 
             this.callNested(observablesNested, 0).subscribe(result => {

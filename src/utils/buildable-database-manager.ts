@@ -2,17 +2,20 @@ import { DatabaseManager } from "./database-manager";
 import { Platform } from "ionic-angular";
 import { SQLite, SQLiteObject, SQLiteTransaction } from "@ionic-native/sqlite";
 import { Crud, Ddl, ExecutableBuilder, Query, QueryCompiled, ResultExecuteSql } from "database-builder";
-import { ValueType } from "database-builder/src/core/utils";
 import { MappersTableBase } from "../utils/mappers-table-base";
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
         platform: Platform, sqlite: SQLite,
-        private _getMapper: MappersTableBase,
+        private _mapper: MappersTableBase,
         public enableLog: boolean = true
     ) {
         super(platform, sqlite);
+    }
+
+    public get mapper(): MappersTableBase {
+        return this._mapper;
     }
 
     public databaseInstance(): Promise<SQLiteObject> {
@@ -46,7 +49,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Promise((resolve, reject) => {
             this.newTransaction(successTransaction)
                 .then((transaction) => {
-                    resolve(new Crud(transaction, this._getMapper, this.enableLog));
+                    resolve(new Crud(transaction, this._mapper, this.enableLog));
                 })
                 .catch(error => {
                     reject(error);
@@ -57,7 +60,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     public crud(): Promise<Crud> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
-                resolve(new Crud(database, this._getMapper, this.enableLog));
+                resolve(new Crud(database, this._mapper, this.enableLog));
             })
                 .catch(reject);
         });
@@ -84,7 +87,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
-                    resolve(new Query(typeT, alias, this._getMapper.getMapper(typeT), database, this.enableLog));
+                    resolve(new Query(typeT, alias, this._mapper.getMapper(typeT), database, this.enableLog));
                 }, reject)
                 .catch(reject);
         });
@@ -93,7 +96,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     public ddl(): Promise<Ddl> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
-                resolve(new Ddl(database, this._getMapper, this.enableLog));
+                resolve(new Ddl(database, this._mapper, this.enableLog));
             })
                 .catch(reject);
         });

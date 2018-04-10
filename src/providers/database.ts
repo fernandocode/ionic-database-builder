@@ -1,22 +1,22 @@
 import { DatabaseMigration } from "./database-migration";
-import { DATABASE_NAME, VERSION } from "./../dependency-injection-definition";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 import { Platform } from "ionic-angular";
 import { BuildableDatabaseManager } from "../utils/buildable-database-manager";
-import { MappersTableBase } from "../utils/mappers-table-base";
+import { DatabaseSettingsFactoryContract } from "..";
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
     constructor(
-        @Inject(VERSION) private _version: number,
-        @Inject(DATABASE_NAME) private _databaseName: string,
+        private _injector: Injector,
+        private _settings: DatabaseSettingsFactoryContract,
         platform: Platform,
         sqlite: SQLite,
-        getMapper: MappersTableBase,
         private _databaseMigration: DatabaseMigration
     ) {
-        super(platform, sqlite, getMapper);
+        super(platform, sqlite,
+            _settings.mapper(_injector)
+        );
     }
 
     protected migrationVersion(database: SQLiteObject, version: number): Promise<boolean> {
@@ -24,10 +24,10 @@ export class Database extends BuildableDatabaseManager {
     }
 
     protected databaseName(): string {
-        return this._databaseName;
+        return this._settings.databaseName(this._injector);
     }
 
     public version(): number {
-        return this._version;
+        return this._settings.version(this._injector);
     }
 }

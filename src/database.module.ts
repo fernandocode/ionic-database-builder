@@ -1,45 +1,51 @@
-import { DATABASE_NAME, VERSION } from "./dependency-injection-definition";
 import { Observable } from "rxjs";
 import { ModuleWithProviders, NgModule, Provider, Type } from "@angular/core";
-import { DatabaseHelperService } from "./utils/database-helper-service";
+import { DatabaseHelperService } from "./providers/database-helper-service";
 import { DatabaseMigrationContract } from "./providers/database-migration-contract";
 import { DatabaseMigration } from "./providers/database-migration";
 import { Database } from "./providers/database";
-import { MappersTableBase } from ".";
-import { DatabaseNameFactory } from "./utils/database-name-factory";
+import { DatabaseSettingsFactoryContract } from "./utils/database-settings-factory-contract";
 
 @NgModule({
     providers: [
         DatabaseMigration,
         Database,
-        DatabaseMigrationContract
+        DatabaseHelperService
     ]
 })
+// https://stackblitz.com/edit/ionic-j3f3ym
 export class DatabaseModule {
-    // https://stackblitz.com/edit/ionic-j3f3ym
+
     public static forRoot(
-        version: number,
-        databaseNameFactory: DatabaseNameFactory,
-        mapper: Type<MappersTableBase>,
+        settings: Type<DatabaseSettingsFactoryContract>,
         databaseMigrationContract?: Type<DatabaseMigrationContract>
     ): ModuleWithProviders {
         const providers: Provider[] = [
-            DatabaseHelperService,
-            DatabaseMigrationContract,
             {
-                provide: VERSION,
-                useValue: version
-            },
-            {
-                provide: DATABASE_NAME,
-                useFactory: databaseNameFactory.useFactory,
-                deps: databaseNameFactory.deps
-            },
-            {
-                provide: MappersTableBase,
-                useClass: mapper
+                provide: DatabaseSettingsFactoryContract,
+                useClass: settings
             }
         ];
+        return this.forBase(providers);
+    }
+
+    public static forRootValue(
+        settings: DatabaseSettingsFactoryContract,
+        databaseMigrationContract?: Type<DatabaseMigrationContract>
+    ): ModuleWithProviders {
+        const providers: Provider[] = [
+            {
+                provide: DatabaseSettingsFactoryContract,
+                useValue: settings
+            }
+        ];
+        return this.forBase(providers);
+    }
+
+    private static forBase(
+        providers: Provider[],
+        databaseMigrationContract?: Type<DatabaseMigrationContract>
+    ): ModuleWithProviders {
         if (databaseMigrationContract) {
             providers.push({
                 provide: DatabaseMigrationContract,

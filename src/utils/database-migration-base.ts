@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 import * as momentNs from "moment";
 const moment = momentNs;
 
-export abstract class MigrationDatabaseBase {
+export abstract class DatabaseMigrationBase {
 
     constructor(
         protected _app: App, protected _config: Config
