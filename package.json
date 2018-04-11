@@ -1,6 +1,6 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').",
   "main": "index.js",
   "scripts": {
