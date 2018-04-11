@@ -38,6 +38,7 @@ import { DatabaseHelper } from 'database-builder';
                 .mapper(
                     false, // readonly
                     void 0, // keyColumn: default "id"
+                    void 0, // default settings constructor
                     // Type models for mapper
                     TestClazz,
                     TestClazzRef
