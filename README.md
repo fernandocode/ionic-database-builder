@@ -15,7 +15,8 @@ This will install the current stable version of `ionic-database-builder` in your
 #### Simple Setup
 
 ```ts
-import { DatabaseModule } from 'ionic-database-builder';
+import { DatabaseModule, DatabaseSettingsFactoryDefault, MappersTableSimple } from 'ionic-database-builder';
+import { DatabaseHelper } from 'database-builder';
 
 @NgModule({
     ...
@@ -42,7 +43,7 @@ import { DatabaseModule } from 'ionic-database-builder';
                     TestClazzRef
                 )),
             // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
-            DatabaseMigration
+            DatabaseMigrationService
             )
         ...
     ],
@@ -52,7 +53,7 @@ export class AppModule { }
 
 ```
 
-**`DatabaseMigration`**
+**`DatabaseMigrationService`**
 
 ```ts
 import { Observable } from 'rxjs/Observable';
@@ -63,7 +64,7 @@ import { DatabaseMigrationContract, Database, MappersTableBase } from 'ionic-dat
 import { Version } from 'ionic-database-builder/src/model/version-model';
 
 @Injectable()
-export class DatabaseMigration extends DatabaseMigrationContract {
+export class DatabaseMigrationService extends DatabaseMigrationContract {
 
     // implemented of "DatabaseMigrationContract"
     public to(version: Version, transation: SQLiteTransaction, mappers: MappersTableBase): Observable<any>[] {
