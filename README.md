@@ -2,7 +2,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fernandocode/ionic-database-builder/issues)
 
 # ionic-database-builder
-Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').
+Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands with integrate execute commands in [SQLite ('@ionic-native/sqlite')](https://ionicframework.com/docs/native/sqlite/).
 
 # Getting Started
 
