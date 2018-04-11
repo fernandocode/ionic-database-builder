@@ -108,7 +108,7 @@ import { DatabaseModule } from 'ionic-database-builder';
     imports: [
         DatabaseModule.forRoot(
             DatabaseSettingsFactory,
-            DatabaseMigration
+            DatabaseMigrationService
         )
         ...
     ],
