@@ -20,7 +20,7 @@ export class MappersTableSimple extends MappersTableBase {
         ...defaultsMapper: Array<new () => any>
     ): MappersTableSimple {
         defaultsMapper.forEach(mapper => {
-            this.add(mapper, readOnly, keyColumn);
+            this.add(mapper, readOnly, keyColumn, settings);
         });
         return this;
     }
