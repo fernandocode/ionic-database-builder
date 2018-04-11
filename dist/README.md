@@ -1,5 +1,5 @@
 # ionic-database-builder
-Extended library from database-builder to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').
+Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').
 
 # Getting Started
 
@@ -52,7 +52,7 @@ export class AppModule { }
 
 ```
 
-**DatabaseMigration**
+**`DatabaseMigration`**
 
 ```ts
 import { Observable } from 'rxjs/Observable';
@@ -112,7 +112,7 @@ export class AppModule { }
 
 ```
 
-**DatabaseSettingsFactory**
+**`DatabaseSettingsFactory`**
 
 ```ts
 import { EnvironmentService } from './../providers/environment-service';
@@ -137,3 +137,83 @@ export class DatabaseSettingsFactory extends DatabaseSettingsFactoryContract {
 
 }
 ```
+
+**`MappersTable`**
+
+```ts
+import { MappersTableSimple, DatabaseHelperService } from "ionic-database-builder";
+import { Injectable } from "@angular/core";
+
+@Injectable()
+export class MappersTable extends MappersTableSimple {
+
+    constructor(_databaseHelper: DatabaseHelperService) {
+        super(
+            _databaseHelper,
+            {
+                references: false,
+                referencesId: true,
+                referencesIdRecursive: false,
+                referencesIdColumn: void 0
+            }
+        );
+
+        this.mapper(false, void 0, this._defaultSettings,
+            // Type models for mapper
+            TestClazz,
+            TestClazzRef
+        );
+
+        this.add(TestClazzAdvanced, false, void 0, {
+            references: false,
+            referencesId: false,
+            referencesIdRecursive: false
+        }, metadata => {
+            metadata
+                // add column reference1_id
+                .mapper(x => x.reference1.id)
+                // add column reference1_anything
+                .mapper(x => x.reference1.anything);
+        });
+    }
+}
+```
+
+### Step 3: Use `Database` in Components
+
+`DatabaseModule` provides the injection of `Database` in its components and services, as can be seen in the following example:
+
+**`MyApp`**
+
+```ts
+import { Database } from 'ionic-database-builder';
+import { Component } from '@angular/core';
+
+@Component({
+  templateUrl: 'app.html'
+})
+export class MyApp {
+
+  constructor(
+    // inject "Database"
+    database: Database
+  ) {
+    database.query(TestClazz).then(query => {
+      query
+        .select(x => x.description)
+        .where(where => where.equal(x => x.id, 1));
+      console.log(query.compile());
+      /**
+       * {
+       *  params: [1],
+       *  query: "SELECT tes.description AS description FROM TestClazz AS tes WHERE tes.id > ?"
+       * }
+       */
+      // to execute in database return promise with result
+      query.toList();
+    });
+  }
+}
+```
+
+[**More documentation on database-builder (Query, Crud, etc)**](https://github.com/fernandocode/database-builder).
