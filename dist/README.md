@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/ionic-database-builder.svg/?a=1)](https://www.npmjs.com/package/ionic-database-builder)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fernandocode/ionic-database-builder/issues)
+
 # ionic-database-builder
 Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands with integrate execute commands in SQLite ('@ionic-native/sqlite').
 
@@ -15,7 +18,8 @@ This will install the current stable version of `ionic-database-builder` in your
 #### Simple Setup
 
 ```ts
-import { DatabaseModule } from 'ionic-database-builder';
+import { DatabaseModule, DatabaseSettingsFactoryDefault, MappersTableSimple } from 'ionic-database-builder';
+import { DatabaseHelper } from 'database-builder';
 
 @NgModule({
     ...
@@ -37,12 +41,13 @@ import { DatabaseModule } from 'ionic-database-builder';
                 .mapper(
                     false, // readonly
                     void 0, // keyColumn: default "id"
+                    void 0, // default settings constructor
                     // Type models for mapper
                     TestClazz,
                     TestClazzRef
                 )),
             // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
-            DatabaseMigration
+            DatabaseMigrationService
             )
         ...
     ],
@@ -52,7 +57,7 @@ export class AppModule { }
 
 ```
 
-**`DatabaseMigration`**
+**`DatabaseMigrationService`**
 
 ```ts
 import { Observable } from 'rxjs/Observable';
@@ -63,7 +68,7 @@ import { DatabaseMigrationContract, Database, MappersTableBase } from 'ionic-dat
 import { Version } from 'ionic-database-builder/src/model/version-model';
 
 @Injectable()
-export class DatabaseMigration extends DatabaseMigrationContract {
+export class DatabaseMigrationService extends DatabaseMigrationContract {
 
     // implemented of "DatabaseMigrationContract"
     public to(version: Version, transation: SQLiteTransaction, mappers: MappersTableBase): Observable<any>[] {

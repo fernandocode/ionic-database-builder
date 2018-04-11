@@ -11,7 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "packagr": "ng-packagr -p ng-package.json",
-    "publish-npm": "npm publish dist"
+    "publish-npm": "npm run packagr && npm publish dist"
   },
   "repository": {
     "type": "git",
