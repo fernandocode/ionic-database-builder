@@ -28,6 +28,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 *.js
+*.js.map
+*.umd.js.map
 *.d.ts
 
 dist.tgz

@@ -1,19 +1,18 @@
 import { Observer } from "rxjs/Observer";
-import { Alert, App, Config } from "ionic-angular";
-import { SQLiteObject, SQLiteTransaction } from "@ionic-native/sqlite";
 import { Observable } from "rxjs/Observable";
 import * as momentNs from "moment";
+import { DatabaseObject, DatabaseTransaction } from "database-builder";
 const moment = momentNs;
 
 export abstract class DatabaseMigrationBase {
 
     constructor(
-        protected _app: App, protected _config: Config
+        // protected _app: App, protected _config: Config
     ) {
 
     }
 
-    public version(database: SQLiteObject, version: number): Promise<boolean> {
+    public version(database: DatabaseObject, version: number): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.checkTableVersion(database).then(_ => {
                 this.checkVersion(database, version)
@@ -27,20 +26,23 @@ export abstract class DatabaseMigrationBase {
         });
     }
 
-    protected errorAlert(error: string) {
+    protected error(error: string, observer: Observer<any>) {
         // tslint:disable-next-line:no-console
         console.error(error);
-        const alert = new Alert(this._app, {
-            title: "Erro ao salvar dados off-line!",
-            message: error,
-            buttons: ["OK"]
-        }, this._config);
-        alert.present();
+        observer.error(error);
+        observer.complete();
+        // const alert = new Alert(this._app, {
+        //     title: 'Erro ao salvar dados off-line!',
+        //     message: error,
+        //     buttons: ['OK']
+        // }, this._config);
+        // alert.present();
     }
 
-    protected abstract migrationExecute(transation: SQLiteTransaction, control: { oldVersion: number, newVersion: number }): Promise<boolean>;
+    protected abstract migrationExecute(
+        transation: DatabaseTransaction, control: { oldVersion: number, newVersion: number }): Promise<boolean>;
 
-    private checkTableVersion(database: SQLiteObject): Promise<any> {
+    private checkTableVersion(database: DatabaseObject): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             const scriptTableVersion = `CREATE TABLE IF NOT EXISTS MigrationVersion(
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
@@ -53,7 +55,7 @@ export abstract class DatabaseMigrationBase {
         });
     }
 
-    private checkVersion(database: SQLiteObject, newVersion: number): Observable<{ oldVersion: number, newVersion: number }> {
+    private checkVersion(database: DatabaseObject, newVersion: number): Observable<{ oldVersion: number, newVersion: number }> {
         return Observable.create((observer: Observer<any>) => {
             this.getVersion(database).subscribe(oldVersion => {
                 if (oldVersion > 0) {
@@ -64,13 +66,13 @@ export abstract class DatabaseMigrationBase {
                                 SET (data, version) = (?, ?);`,
                             [moment().unix(), newVersion])
                             .then()
-                            .catch(this.errorAlert);
+                            .catch(err => this.error(err, observer));
                     }
                 } else {
                     database.executeSql(`INSERT INTO MigrationVersion (data, version) VALUES (?, ?)`,
                         [moment().unix(), newVersion])
                         .then()
-                        .catch(this.errorAlert);
+                        .catch(err => this.error(err, observer));
                 }
                 observer.next({
                     oldVersion: oldVersion,
@@ -81,7 +83,7 @@ export abstract class DatabaseMigrationBase {
         });
     }
 
-    private getVersion(database: SQLiteObject): Observable<number> {
+    private getVersion(database: DatabaseObject): Observable<number> {
         return Observable.create((observer: Observer<number>) => {
             database.executeSql(`SELECT * FROM MigrationVersion`, {})
                 .then((result) => {
@@ -92,13 +94,13 @@ export abstract class DatabaseMigrationBase {
                     observer.next(version);
                     observer.complete();
                 })
-                .catch(this.errorAlert);
+                .catch(err => this.error(err, observer));
         });
     }
 
-    private migration(database: SQLiteObject, control: { oldVersion: number, newVersion: number }): Promise<boolean> {
+    private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            database.transaction((transation: SQLiteTransaction) => {
+            database.transaction((transation: DatabaseTransaction) => {
                 this.migrationExecute(transation, control)
                     .then(r => resolve(r))
                     .catch(er => reject(er));

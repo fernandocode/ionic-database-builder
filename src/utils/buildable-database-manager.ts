@@ -1,24 +1,27 @@
+import { DatabaseResult } from "database-builder";
 import { DatabaseManager } from "./database-manager";
 import { Platform } from "ionic-angular";
-import { SQLite, SQLiteObject, SQLiteTransaction } from "@ionic-native/sqlite";
-import { Crud, Ddl, ExecutableBuilder, Query, QueryCompiled, ResultExecuteSql } from "database-builder";
+import { Crud, DatabaseObject, DatabaseTransaction, Ddl, ExecutableBuilder, Query, QueryCompiled } from "database-builder";
 import { MappersTableBase } from "../utils/mappers-table-base";
+import { DatabaseFactoryContract } from "./database-factory-contract";
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
-        platform: Platform, sqlite: SQLite,
+        // platform: Platform, sqlite: SQLite,
+        databaseFactory: DatabaseFactoryContract,
         private _mapper: MappersTableBase,
         public enableLog: boolean = true
     ) {
-        super(platform, sqlite);
+        super(databaseFactory);
+        // super(platform, sqlite);
     }
 
     public get mapper(): MappersTableBase {
         return this._mapper;
     }
 
-    public databaseInstance(): Promise<SQLiteObject> {
+    public databaseInstance(): Promise<DatabaseObject> {
         const database = super.databaseInstance(this.databaseName(), this.version());
         if (!database) {
             throw new Error("SQLite not avaliable!");
@@ -26,10 +29,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return database;
     }
 
-    public newTransaction(successTransaction: () => void): Promise<SQLiteTransaction> {
+    public newTransaction(successTransaction: () => void): Promise<DatabaseTransaction> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
-                database.transaction((result: SQLiteTransaction) => {
+                database.transaction((result: DatabaseTransaction) => {
                     resolve(result);
                 })
                     .then(x => {
@@ -66,7 +69,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
-    public sql(sql: string, params: any[] = []): Promise<ResultExecuteSql> {
+    public sql(sql: string, params: any[] = []): Promise<DatabaseResult> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
                 const executable = new ExecutableBuilder(this.enableLog);
@@ -75,7 +78,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                     // tslint:disable-next-line:object-literal-shorthand
                     params: params
                 } as QueryCompiled, database)
-                    .then((cursor: ResultExecuteSql) => {
+                    .then((cursor: DatabaseResult) => {
                         resolve(cursor);
                     });
             })

@@ -2,29 +2,30 @@ import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
-import { App, Config } from "ionic-angular";
 import { Injectable, Injector, Optional } from "@angular/core";
-import { SQLiteTransaction } from "@ionic-native/sqlite";
-import { Ddl } from "database-builder";
+import { DatabaseTransaction, Ddl } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";
 import { DatabaseMigrationBase } from "../utils/database-migration-base";
 
 @Injectable()
 export class DatabaseMigration extends DatabaseMigrationBase {
 
+    private _settings: DatabaseSettingsFactoryContract;
+
     constructor(
         private _injector: Injector,
-        private _settings: DatabaseSettingsFactoryContract,
-        app: App,
-        config: Config,
+        // private _settings: DatabaseSettingsFactoryContract,
+        // app: App,
+        // config: Config,
         @Optional() private _databaseMigrationContract: DatabaseMigrationContract
     ) {
         super(
-            app, config
+            // app, config
         );
+        this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
-    public databaseReset(transation: SQLiteTransaction): Observable<any> {
+    public databaseReset(transation: DatabaseTransaction): Observable<any> {
 
         // tslint:disable-next-line:no-console
         console.info("database reset");
@@ -46,7 +47,7 @@ export class DatabaseMigration extends DatabaseMigrationBase {
         return Observable.forkJoin(observablesWait);
     }
 
-    protected migrationExecute(transation: SQLiteTransaction, version: Version): Promise<boolean> {
+    protected migrationExecute(transation: DatabaseTransaction, version: Version): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
 
             let observablesNested: Array<Observable<any>> = [];
