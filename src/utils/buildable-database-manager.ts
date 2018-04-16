@@ -8,13 +8,11 @@ import { DatabaseFactoryContract } from "./database-factory-contract";
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
-        // platform: Platform, sqlite: SQLite,
         databaseFactory: DatabaseFactoryContract,
         private _mapper: MappersTableBase,
         public enableLog: boolean = true
     ) {
         super(databaseFactory);
-        // super(platform, sqlite);
     }
 
     public get mapper(): MappersTableBase {
@@ -75,7 +73,6 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                 const executable = new ExecutableBuilder(this.enableLog);
                 executable.execute({
                     query: sql,
-                    // tslint:disable-next-line:object-literal-shorthand
                     params: params
                 } as QueryCompiled, database)
                     .then((cursor: DatabaseResult) => {

@@ -4,6 +4,6 @@ import { DatabaseObject } from "database-builder";
 
 export abstract class DatabaseFactoryContract {
 
-    public abstract database(): Promise<DatabaseObject>;
+    public abstract database(databaseName: string): Promise<DatabaseObject>;
 
 }

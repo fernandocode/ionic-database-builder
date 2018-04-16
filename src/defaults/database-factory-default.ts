@@ -15,12 +15,12 @@ export class DatabaseFactoryDefault extends DatabaseFactoryContract {
         super();
     }
 
-    public database(): Promise<DatabaseObject> {
+    public database(databaseName: string): Promise<DatabaseObject> {
         return new Promise<DatabaseObject>((resolve, reject) => {
             if (this._isAvailable) {
                 resolve(
                     this._databaseCreator.create({
-                        name: name,
+                        name: databaseName,
                         location: "default"
                     })
                 );

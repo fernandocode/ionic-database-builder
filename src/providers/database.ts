@@ -12,14 +12,10 @@ export class Database extends BuildableDatabaseManager {
 
     constructor(
         private _injector: Injector,
-        // private _settings: DatabaseSettingsFactoryContract,
-        // platform: Platform,
-        // sqlite: SQLite,
         databaseFactory: DatabaseFactoryContract,
         private _databaseMigration: DatabaseMigration
     ) {
         super(
-            // platform, sqlite,
             databaseFactory,
             _injector.get(DatabaseSettingsFactoryContract).mapper(_injector)
         );
@@ -36,5 +32,9 @@ export class Database extends BuildableDatabaseManager {
 
     public version(): number {
         return this._settings.version(this._injector);
+    }
+
+    public databaseNameFile(databaseName: string = this.databaseName()): string {
+        return this.addDatabaseNameExtension(this.cleanDatabaseName(databaseName));
     }
 }
