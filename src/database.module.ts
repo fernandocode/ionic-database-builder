@@ -29,49 +29,15 @@ export class DatabaseModule {
         settingsProvider: ProviderTyped<DatabaseSettingsFactoryContract>,
         isAvailableProvider: ProviderTyped<boolean>,
         databaseCreatorProvider: ProviderTyped<DatabaseCreatorContract>,
-        databaseMigrationContract?: Type<DatabaseMigrationContract>,
-        // providers: Provider[] = []
+        databaseMigrationContract?: Type<DatabaseMigrationContract>
     ): ModuleWithProviders {
-        // providers = providers.concat([
         const providers: Provider[] = [
             this.createProvider(DatabaseSettingsFactoryContract, settingsProvider),
             this.createProvider(IS_AVAILABLE_DATABASE, isAvailableProvider),
-            this.createProvider(DATABASE_CREATOR, databaseCreatorProvider),
-            // {
-            //     provide: DatabaseSettingsFactoryContract,
-            //     useClass: settingsProvider
-            // }
+            this.createProvider(DATABASE_CREATOR, databaseCreatorProvider)
         ];
-        // );
         return this.forBase(providers);
     }
-    // public static forRoot(
-    //     settings: Type<DatabaseSettingsFactoryContract>,
-    //     databaseMigrationContract?: Type<DatabaseMigrationContract>,
-    //     // providers: Provider[] = []
-    // ): ModuleWithProviders {
-    //     // providers = providers.concat([
-    //     const providers: Provider[] = [
-    //         {
-    //             provide: DatabaseSettingsFactoryContract,
-    //             useClass: settings
-    //         }
-    //     ];
-    //     return this.forBase(providers);
-    // }
-
-    // public static forRootValue(
-    //     settings: DatabaseSettingsFactoryContract,
-    //     databaseMigrationContract?: Type<DatabaseMigrationContract>
-    // ): ModuleWithProviders {
-    //     const providers: Provider[] = [
-    //         {
-    //             provide: DatabaseSettingsFactoryContract,
-    //             useValue: settings
-    //         }
-    //     ];
-    //     return this.forBase(providers);
-    // }
 
     private static createProvider(provide: any, provider: ProviderTyped<any>): Provider {
         return Object.assign({

@@ -14,14 +14,9 @@ export class DatabaseMigration extends DatabaseMigrationBase {
 
     constructor(
         private _injector: Injector,
-        // private _settings: DatabaseSettingsFactoryContract,
-        // app: App,
-        // config: Config,
         @Optional() private _databaseMigrationContract: DatabaseMigrationContract
     ) {
-        super(
-            // app, config
-        );
+        super();
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
@@ -32,7 +27,6 @@ export class DatabaseMigration extends DatabaseMigrationBase {
 
         const observablesWait: Array<Observable<any>> = [];
 
-        // const mappers = this._mappersTable;
         const mappers = this._settings.mapper(this._injector);
 
         // remove dados offline da versão anterior, pois o formato dos dados foi alterado de uma versão para a outra

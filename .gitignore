@@ -34,3 +34,5 @@ UserInterfaceState.xcuserstate
 
 dist.tgz
 dist/
+
+!protractor.conf.js

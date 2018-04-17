@@ -6,12 +6,6 @@ const moment = momentNs;
 
 export abstract class DatabaseMigrationBase {
 
-    constructor(
-        // protected _app: App, protected _config: Config
-    ) {
-
-    }
-
     public version(database: DatabaseObject, version: number): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.checkTableVersion(database).then(_ => {
@@ -31,12 +25,6 @@ export abstract class DatabaseMigrationBase {
         console.error(error);
         observer.error(error);
         observer.complete();
-        // const alert = new Alert(this._app, {
-        //     title: 'Erro ao salvar dados off-line!',
-        //     message: error,
-        //     buttons: ['OK']
-        // }, this._config);
-        // alert.present();
     }
 
     protected abstract migrationExecute(

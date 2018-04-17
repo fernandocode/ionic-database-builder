@@ -1,6 +1,5 @@
 import { DatabaseResult } from "database-builder";
 import { DatabaseManager } from "./database-manager";
-import { Platform } from "ionic-angular";
 import { Crud, DatabaseObject, DatabaseTransaction, Ddl, ExecutableBuilder, Query, QueryCompiled } from "database-builder";
 import { MappersTableBase } from "../utils/mappers-table-base";
 import { DatabaseFactoryContract } from "./database-factory-contract";

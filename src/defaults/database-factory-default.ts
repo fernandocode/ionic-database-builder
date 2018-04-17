@@ -1,6 +1,4 @@
 import { Inject } from "@angular/core";
-import { MappersTableBase } from "..";
-import { DatabaseSettingsModel } from "../model/database-settings-model";
 import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
 import { DatabaseCreatorContract } from "../model/database-creator-contract";

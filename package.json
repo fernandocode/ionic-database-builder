@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -44,10 +44,7 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
     "@angular/core": "5.0.0",
-    "@ionic-native/core": "4.7.0",
-    "@ionic-native/sqlite": "4.7.0",
     "database-builder": "0.0.22",
-    "ionic-angular": "3.9.2",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
