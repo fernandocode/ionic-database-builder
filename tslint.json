@@ -1,9 +1,11 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+    // "defaultSeverity": "error",
+    // "extends": [
+    //     "tslint:recommended"
+    // ],
+    "rulesDirectory": [
+        "node_modules/codelyzer"
     ],
-    "jsRules": {},
     "rules": {
         "ordered-imports": [
             true,

@@ -36,3 +36,4 @@ dist.tgz
 dist/
 
 !protractor.conf.js
+!karma.conf.js
