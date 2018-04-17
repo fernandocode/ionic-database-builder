@@ -2,7 +2,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fernandocode/ionic-database-builder/issues)
 
 # ionic-database-builder
-Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands with integrate execute commands in [SQLite ('@ionic-native/sqlite')](https://ionicframework.com/docs/native/sqlite/).
+Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands. Allowing integrate execute commands with [SQLite ('@ionic-native/sqlite')](https://ionicframework.com/docs/native/sqlite/), [Web Sql](https://www.w3.org/TR/webdatabase/), [Indexed Database](https://www.w3.org/TR/IndexedDB/), etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.
 
 # Getting Started
 
@@ -13,6 +13,10 @@ ionic cordova plugin add cordova-sqlite-storage
 npm install --save ionic-database-builder 
 ```
 This will install the current stable version of `ionic-database-builder` in your `node_modules` directory and save the entry in `package.json`.
+
+#### Step 1.1: If it will be used with SQLite plugin install:
+
+[Install as instructed.](https://ionicframework.com/docs/native/sqlite/)
 
 ### Step 2: Add Module in App and Settings
 
@@ -25,31 +29,46 @@ import { DatabaseHelper } from 'database-builder';
 @NgModule({
     ...
     imports: [
-        DatabaseModule.forRootValue(
-            // object to simple settings database
-            new DatabaseSettingsFactoryDefault(
-                1, // version database 
-                "database1", // name database
-                // mapper for database
-                new MappersTableSimple(new DatabaseHelper(), {
+        DatabaseModule.forRoot(
+            {// settings database: name, version and mapper
+                useValue: // object to simple settings database
+                new DatabaseSettingsFactoryDefault(
+                    1, // version database 
+                    "database1", // name database
+                    // mapper for database
+                    new MappersTableSimple(new DatabaseHelper(), {
                     references: false, // if "true" generate column for serialize object reference to JSON.
-                        // Example in "TestClazz", create column "testClazzRef" to serialize "TestClazzRef" object
+                    // Example in "TestClazz", create column "testClazzRef" to serialize "TestClazzRef" object
                     referencesId: true, // if "true" generate column for id reference.
-                        // Example in "TestClazz", create column "testClazzRef_id" to save "TestClazzRef" property "id"
+                    // Example in "TestClazz", create column "testClazzRef_id" to save "TestClazzRef" property "id"
                     referencesIdRecursive: false, // if "true" generate column for id reference recursive for all references inner.
                     referencesIdColumn: "id" // name id column references
-                })
-                .mapper(
-                    false, // readonly
-                    void 0, // keyColumn: default "id"
-                    void 0, // default settings constructor
-                    // Type models for mapper
-                    TestClazz,
-                    TestClazzRef
-                )),
+                    })
+                    .mapper(
+                        false, // readonly
+                        void 0, // keyColumn: default "id"
+                        void 0, // default settings constructor
+                        // Type models for mapper
+                        TestClazz,
+                        TestClazzRef
+                    ))
+            },
+            {// is available database in context
+                // As SQLite is only available on the platform cordova this is used to verify this parameter
+                // useFactory: (platform: Platform) => {
+                //   return platform.is("cordova");
+                // },
+                // deps: [Platform],
+                // or simply can pass true without conditions
+                useValue: true
+            },
+            {
+                // Declare the implementation of 'DatabaseCreatorContract' that you want to use, you can include a proxy, use libraries with different signatures, or create mocks for tests, etc.
+                useClass: SQLite
+            },
             // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
             DatabaseMigrationService
-            )
+            ),
         ...
     ],
     ...
@@ -107,9 +126,25 @@ import { DatabaseModule } from 'ionic-database-builder';
     ...
     imports: [
         DatabaseModule.forRoot(
-            DatabaseSettingsFactory,
+            {// settings database: name, version and mapper
+                useClass: DatabaseSettingsFactory
+            },
+            {// is available database in context
+                // As SQLite is only available on the platform cordova this is used to verify this parameter
+                useFactory: (platform: Platform) => {
+                return platform.is("cordova");
+                },
+                deps: [Platform],
+                // // or simply can pass true without conditions
+                // useValue: true
+            },
+            {
+                // Declare the implementation of 'DatabaseCreatorContract' that you want to use, you can include a proxy, use libraries with different signatures, or create mocks for tests, etc.
+                useClass: SQLite
+            },
+            // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
             DatabaseMigrationService
-        )
+            ),
         ...
     ],
     ...
