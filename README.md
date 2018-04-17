@@ -9,7 +9,6 @@ Extended library from [database-builder](https://github.com/fernandocode/databas
 ### Step 1: Install npm module
 
 ```bash
-ionic cordova plugin add cordova-sqlite-storage
 npm install --save ionic-database-builder 
 ```
 This will install the current stable version of `ionic-database-builder` in your `node_modules` directory and save the entry in `package.json`.
