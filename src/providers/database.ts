@@ -1,9 +1,10 @@
 import { DatabaseMigration } from "./database-migration";
-import { Injectable, Injector } from "@angular/core";
+import { Inject, Injectable, Injector } from "@angular/core";
 import { BuildableDatabaseManager } from "../utils/buildable-database-manager";
 import { DatabaseSettingsFactoryContract } from "..";
 import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DatabaseObject } from "database-builder";
+import { IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
@@ -11,6 +12,7 @@ export class Database extends BuildableDatabaseManager {
     private _settings: DatabaseSettingsFactoryContract;
 
     constructor(
+        @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
         private _injector: Injector,
         databaseFactory: DatabaseFactoryContract,
         private _databaseMigration: DatabaseMigration
@@ -23,7 +25,12 @@ export class Database extends BuildableDatabaseManager {
     }
 
     protected migrationVersion(database: DatabaseObject, version: number): Promise<boolean> {
-        return this._databaseMigration.version(database, version);
+        if (this._isAvailable) {
+            return this._databaseMigration.version(database, version);
+        }
+        return new Promise<boolean>((resolve, reject) => {
+            resolve(true);
+        });
     }
 
     protected databaseName(): string {
