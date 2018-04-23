@@ -6,9 +6,10 @@ import { Injectable, Injector, Optional } from "@angular/core";
 import { DatabaseTransaction, Ddl } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";
 import { DatabaseMigrationBase } from "../utils/database-migration-base";
+import { DatabaseResettableContract } from "./database-resettable-contract";
 
 @Injectable()
-export class DatabaseMigration extends DatabaseMigrationBase {
+export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract{
 
     private _settings: DatabaseSettingsFactoryContract;
 
@@ -20,7 +21,7 @@ export class DatabaseMigration extends DatabaseMigrationBase {
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
-    public databaseReset(transation: DatabaseTransaction): Observable<any> {
+    public reset(transation: DatabaseTransaction): Observable<any> {
 
         // tslint:disable-next-line:no-console
         console.info("database reset");
@@ -47,7 +48,10 @@ export class DatabaseMigration extends DatabaseMigrationBase {
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
                 const toObservables = this._databaseMigrationContract.to(
-                    version, transation, this._settings.mapper(this._injector)
+                    version, 
+                    transation, 
+                    this._settings.mapper(this._injector),
+                    this
                 );
                 if (toObservables && toObservables.length > 0) {
                     observablesNested = observablesNested.concat(toObservables);
@@ -55,7 +59,7 @@ export class DatabaseMigration extends DatabaseMigrationBase {
             }
 
             if (observablesNested.length === 0 && version.oldVersion < 1) {
-                observablesNested.push(this.databaseReset(transation));
+                observablesNested.push(this.reset(transation));
             }
 
             this.callNested(observablesNested, 0).subscribe(result => {
