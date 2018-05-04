@@ -46,6 +46,8 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         return new Promise<boolean>((resolve, reject) => {
 
             let observablesNested: Array<Observable<any>> = [];
+            console.log("this._databaseMigrationContract:");
+            console.log(this._databaseMigrationContract);
             if (this._databaseMigrationContract) {
                 const toObservables = this._databaseMigrationContract.to(
                     version, 

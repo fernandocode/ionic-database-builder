@@ -36,7 +36,7 @@ export class DatabaseModule {
             this.createProvider(IS_AVAILABLE_DATABASE, isAvailableProvider),
             this.createProvider(DATABASE_CREATOR, databaseCreatorProvider)
         ];
-        return this.forBase(providers);
+        return this.forBase(providers, databaseMigrationContract);
     }
 
     private static createProvider(provide: any, provider: ProviderTyped<any>): Provider {
@@ -49,6 +49,8 @@ export class DatabaseModule {
         providers: Provider[],
         databaseMigrationContract?: Type<DatabaseMigrationContract>
     ): ModuleWithProviders {
+        console.log("databaseMigrationContract:");
+        console.log(databaseMigrationContract);
         if (databaseMigrationContract) {
             providers.push({
                 provide: DatabaseMigrationContract,
