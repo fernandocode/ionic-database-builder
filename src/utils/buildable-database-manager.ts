@@ -57,12 +57,37 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    public beginTransaction(): Promise<Crud> {
+        return new Promise((resolve, reject) => {
+            this.sql("BEGIN TRANSACTION").then(r => {
+                this.crud().then(crud => {
+                    resolve(crud);
+                }).catch(reject);
+            }).catch(reject);
+        });
+    }
+
+    public commitTransaction(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.sql("COMMIT").then(r => {
+                resolve(true);
+            }).catch(reject);
+        });
+    }
+
+    public rollbackTransaction(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.sql("ROLLBACK").then(r => {
+                resolve(true);
+            }).catch(reject);
+        });
+    }
+
     public crud(): Promise<Crud> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
                 resolve(new Crud(database, this._mapper, this.enableLog));
-            })
-                .catch(reject);
+            }).catch(reject);
         });
     }
 
@@ -78,7 +103,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                         resolve(cursor);
                     });
             })
-                .catch(reject);
+            .catch(reject);
         });
     }
 

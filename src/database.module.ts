@@ -49,8 +49,6 @@ export class DatabaseModule {
         providers: Provider[],
         databaseMigrationContract?: Type<DatabaseMigrationContract>
     ): ModuleWithProviders {
-        console.log("databaseMigrationContract:");
-        console.log(databaseMigrationContract);
         if (databaseMigrationContract) {
             providers.push({
                 provide: DatabaseMigrationContract,

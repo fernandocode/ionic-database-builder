@@ -104,8 +104,34 @@ describe('Mapper', () => {
         const database: Database = TestBed.get(Database);
         database.crud().then(crud => {
             const result = crud.insert(Cliente, clienteToSave).compile();
-            expect(result.params.toString()).toEqual([1, 'Razão', 'Apelido', false, 2, 3].toString());
+            expect(result.params.toString()).toEqual([
+                clienteToSave.id, clienteToSave.razaoSocial, clienteToSave.apelido,
+                clienteToSave.desativo, clienteToSave.cidade.id, clienteToSave.classificacao.id
+            ].toString());
             expect(result.query).toEqual('INSERT INTO Cliente (id, razaoSocial, apelido, desativo, cidade_id, classificacao_id) VALUES (?, ?, ?, ?, ?, ?)');
+        });
+    }));
+
+    it('Test transaction mapper insert T', async(() => {
+        const database: Database = TestBed.get(Database);
+        let rollback = () => {
+            database.rollbackTransaction().then().catch();
+        }
+        database.beginTransaction().then(crud => {
+            try {
+                const result = crud.insert(Cliente, clienteToSave).compile();
+                expect(result.params.toString()).toEqual([
+                    clienteToSave.id, clienteToSave.razaoSocial, clienteToSave.apelido,
+                    clienteToSave.desativo, clienteToSave.cidade.id, clienteToSave.classificacao.id
+                ].toString());
+                expect(result.query).toEqual('INSERT INTO Cliente (id, razaoSocial, apelido, desativo, cidade_id, classificacao_id) VALUES (?, ?, ?, ?, ?, ?)');
+                database.commitTransaction().then(x => {
+                    expect(x).toEqual(true);
+                }).catch(rollback);
+            }
+            catch (e) {
+                rollback();
+            }
         });
     }));
 
