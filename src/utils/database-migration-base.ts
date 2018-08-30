@@ -1,8 +1,8 @@
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 import * as momentNs from "moment";
-import { DatabaseObject, DatabaseTransaction } from "database-builder";
 const moment = momentNs;
+import { DatabaseObject, DatabaseTransaction } from "database-builder";
 
 export abstract class DatabaseMigrationBase {
 

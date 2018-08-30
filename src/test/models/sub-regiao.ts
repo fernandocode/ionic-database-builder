@@ -1,7 +1,7 @@
-import { BaseModel } from "./base-model";
+import { BaseImport } from './base-import';
 import { Regiao } from "./regiao";
 
-export class SubRegiao extends BaseModel<number> {
+export class SubRegiao extends BaseImport<number> {
 
     public nome: string = "";
     public regiao: Regiao = new Regiao();

@@ -1,6 +1,6 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.0.11",
+  "version": "0.1.0-beta.2",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands. Allowing integrate execute commands with SQLite ('@ionic-native/sqlite'), Web Sql, etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.",
   "main": "index.js",
   "scripts": {
@@ -44,17 +44,18 @@
   },
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
-    "@angular/core": ">=5.0.0",
-    "database-builder": ">=0.0.24"
+    "@angular/core": "^5.0.0",
+    "database-builder": ">=0.1.0-beta.1"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.4",
-    "@angular/common": "5.0.0",
-    "@angular/compiler": "5.0.0",
-    "@angular/compiler-cli": "5.0.0",
-    "@angular/language-service": "5.0.0",
-    "@angular/platform-browser": "5.0.0",
-    "@angular/platform-browser-dynamic": "5.0.0",
+    "@angular/core": "^5.0.0",
+    "@angular/common": "^5.0.0",
+    "@angular/compiler": "^5.0.0",
+    "@angular/compiler-cli": "^5.0.0",
+    "@angular/language-service": "^5.0.0",
+    "@angular/platform-browser": "^5.0.0",
+    "@angular/platform-browser-dynamic": "^5.0.0",
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",

@@ -1,6 +1,5 @@
 import { DatabaseMigration } from "./providers/database-migration";
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from "./dependency-injection-definition";
-import { Observable } from "rxjs";
 import { ModuleWithProviders, NgModule, Provider, Type } from "@angular/core";
 import { DatabaseHelperService } from "./providers/database-helper-service";
 import { DatabaseMigrationContract } from "./providers/database-migration-contract";

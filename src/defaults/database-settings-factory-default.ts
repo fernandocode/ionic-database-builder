@@ -1,5 +1,6 @@
+import { GetMapper } from 'database-builder';
 import { Injector } from "@angular/core";
-import { DatabaseSettingsFactoryContract, MappersTableBase } from "..";
+import { DatabaseSettingsFactoryContract } from "..";
 import { DatabaseSettingsModel } from "../model/database-settings-model";
 
 export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContract {
@@ -9,7 +10,7 @@ export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContr
     constructor(
         versionOrModel: number | DatabaseSettingsModel,
         databaseName: string,
-        mapper: MappersTableBase
+        mapper: GetMapper
     ) {
         super();
         if (Number.isInteger(versionOrModel as number)) {
@@ -31,7 +32,7 @@ export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContr
         return this._model.version;
     }
 
-    public mapper(): MappersTableBase {
+    public mapper(): GetMapper {
         return this._model.mapper;
     }
 }

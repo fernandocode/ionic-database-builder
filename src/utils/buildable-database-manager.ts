@@ -1,20 +1,19 @@
 import { DatabaseResult } from "database-builder";
 import { DatabaseManager } from "./database-manager";
-import { Crud, DatabaseObject, DatabaseTransaction, Ddl, ExecutableBuilder, Query, QueryCompiled } from "database-builder";
-import { MappersTableBase } from "../utils/mappers-table-base";
+import { Crud, DatabaseObject, DatabaseTransaction, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from "database-builder";
 import { DatabaseFactoryContract } from "./database-factory-contract";
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
         databaseFactory: DatabaseFactoryContract,
-        private _mapper: MappersTableBase,
+        private _mapper: GetMapper,
         public enableLog: boolean = true
     ) {
         super(databaseFactory);
     }
 
-    public get mapper(): MappersTableBase {
+    public get mapper(): GetMapper {
         return this._mapper;
     }
 
@@ -111,7 +110,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
-                    resolve(new Query(typeT, alias, this._mapper.getMapper(typeT), database, this.enableLog));
+                    resolve(new Query(typeT, alias, this._mapper.get(typeT), database, this.enableLog));
                 }, reject)
                 .catch(reject);
         });

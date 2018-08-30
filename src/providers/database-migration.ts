@@ -1,7 +1,6 @@
 import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
-import { Observer } from "rxjs/Observer";
-import { Observable } from "rxjs/Observable";
+import { Observable, Observer } from "rxjs";
 import { Injectable, Injector, Optional } from "@angular/core";
 import { DatabaseTransaction, Ddl } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";

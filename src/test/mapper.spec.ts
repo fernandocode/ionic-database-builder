@@ -26,8 +26,8 @@ describe('Mapper', () => {
                     },
                     {
                         useFactory: (mapper: TableMapper) => {
-                            console.log(mapper.getMapper(TestClazz));
-                            return mapper.getMapper(TestClazz) ? true : false;
+                            console.log(mapper.get(TestClazz));
+                            return mapper.get(TestClazz) ? true : false;
                         },
                         deps: [TableMapper]
                         // useValue: true
@@ -74,27 +74,27 @@ describe('Mapper', () => {
     }));
 
     const clienteToSave = {
-        id: 1,
+        codeImport: 1,
         razaoSocial: 'Razão',
         apelido: 'Apelido',
         cidade: {
-            id: 2,
+            codeImport: 2,
             nome: 'Cidade',
             uf: {
-                id: 'SC',
+                codeImport: 'SC',
                 nome: 'Santa Catarina'
             } as Uf,
             subRegiao: {
-                id: 4,
+                codeImport: 4,
                 nome: 'Sub Região',
                 regiao: {
-                    id: 5,
+                    codeImport: 5,
                     nome: 'Região'
                 } as Regiao
             } as SubRegiao,
         } as Cidade,
         classificacao: {
-            id: 3,
+            codeImport: 3,
             descricao: 'Top'
         } as Classificacao,
         desativo: false
@@ -105,10 +105,10 @@ describe('Mapper', () => {
         database.crud().then(crud => {
             const result = crud.insert(Cliente, clienteToSave).compile();
             expect(result.params.toString()).toEqual([
-                clienteToSave.id, clienteToSave.razaoSocial, clienteToSave.apelido,
-                clienteToSave.desativo, clienteToSave.cidade.id, clienteToSave.classificacao.id
+                clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+                clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
             ].toString());
-            expect(result.query).toEqual('INSERT INTO Cliente (id, razaoSocial, apelido, desativo, cidade_id, classificacao_id) VALUES (?, ?, ?, ?, ?, ?)');
+            expect(result.query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
         });
     }));
 
@@ -121,10 +121,10 @@ describe('Mapper', () => {
             try {
                 const result = crud.insert(Cliente, clienteToSave).compile();
                 expect(result.params.toString()).toEqual([
-                    clienteToSave.id, clienteToSave.razaoSocial, clienteToSave.apelido,
-                    clienteToSave.desativo, clienteToSave.cidade.id, clienteToSave.classificacao.id
+                    clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+                    clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
                 ].toString());
-                expect(result.query).toEqual('INSERT INTO Cliente (id, razaoSocial, apelido, desativo, cidade_id, classificacao_id) VALUES (?, ?, ?, ?, ?, ?)');
+                expect(result.query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
                 database.commitTransaction().then(x => {
                     expect(x).toEqual(true);
                 }).catch(rollback);

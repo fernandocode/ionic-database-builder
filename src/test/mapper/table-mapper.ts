@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { DatabaseHelperService, MappersTableSimple } from "../..";
+import { DatabaseHelperService } from "../..";
 import { TestClazzRef } from "../models/test-clazz-ref";
 import { TestClazz } from "../models/test-clazz";
 import { Cliente } from "../models/cliente";
@@ -8,10 +8,10 @@ import { Uf } from "../models/uf";
 import { SubRegiao } from "../models/sub-regiao";
 import { Regiao } from "../models/regiao";
 import { Classificacao } from "../models/classificacao";
-
+import { MapperBase } from "database-builder";
 
 @Injectable()
-export class TableMapper extends MappersTableSimple {
+export class TableMapper extends MapperBase {
 
     constructor(_databaseHelper: DatabaseHelperService) {
         super(
@@ -19,20 +19,17 @@ export class TableMapper extends MappersTableSimple {
             {
                 references: false,
                 referencesId: true,
-                referencesIdRecursive: false,
-                referencesIdColumn: void 0
+                referencesIdRecursive: false
             }
         );
 
-        this.mapper(false, void 0, this._defaultSettings,
-            TestClazz,
-            TestClazzRef,
-            Cliente,
-            Cidade,
-            Uf,
-            SubRegiao,
-            Regiao,
-            Classificacao
-        );
+        this.add(TestClazzRef, x => x.id, true);
+        this.add(TestClazz, x => x.id, true);
+        this.add(Regiao, x => x.codeImport, true);
+        this.add(SubRegiao, x => x.codeImport, true);
+        this.add(Uf, x => x.codeImport, true);
+        this.add(Cidade, x => x.codeImport, true);
+        this.add(Classificacao, x => x.codeImport, true);
+        this.add(Cliente, x => x.internalKey, true);
     }
 }

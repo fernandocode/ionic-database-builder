@@ -1,11 +1,11 @@
-import { BaseModel } from "./base-model";
+import { BaseImport } from './base-import';
 
-export class Regiao extends BaseModel<number> {
+export class Regiao extends BaseImport<number> {
 
     public nome: string = "";
 
     constructor(instance?: Regiao) {
-        super(instance ? instance.id : -1);
+        super(instance ? instance.codeImport : -1);
         if (instance) {
             Object.assign(this, instance);
         }
