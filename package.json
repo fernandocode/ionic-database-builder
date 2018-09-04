@@ -45,7 +45,7 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
     "@angular/core": "~6.1.1",
-    "database-builder": ">=0.1.0-beta.3"
+    "database-builder": ">=0.1.0-beta.4"
   },
   "devDependencies": {
     "@angular/cli": "~6.1.1",
@@ -67,8 +67,8 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ng-packagr": "2.4.2",
-    "protractor": "~5.1.2",
+    "ng-packagr": "4.1.1",
+    "protractor": "~5.4.0",
     "ts-node": "~4.1.0",
     "tsickle": "0.27.5",
     "tslint": "~5.9.1",
