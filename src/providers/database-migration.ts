@@ -1,6 +1,6 @@
 import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
-import { Observable, Observer } from "rxjs";
+import { forkJoin, from, Observable, Observer } from "rxjs";
 import { Injectable, Injector, Optional } from "@angular/core";
 import { DatabaseTransaction, Ddl } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";
@@ -33,12 +33,12 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         const ddl = new Ddl(transation, mappers, true);
         mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
-                observablesWait.push(Observable.fromPromise(ddl.drop(value.newable).execute()));
-                observablesWait.push(Observable.fromPromise(ddl.create(value.newable).execute()));
+                observablesWait.push(from(ddl.drop(value.newable).execute()));
+                observablesWait.push(from(ddl.create(value.newable).execute()));
             }
         });
 
-        return Observable.forkJoin(observablesWait);
+        return forkJoin(observablesWait);
     }
 
     protected migrationExecute(transation: DatabaseTransaction, version: Version): Promise<boolean> {
