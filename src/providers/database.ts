@@ -6,7 +6,9 @@ import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DatabaseObject } from "database-builder";
 import { IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class Database extends BuildableDatabaseManager {
 
     private _settings: DatabaseSettingsFactoryContract;
