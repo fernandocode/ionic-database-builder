@@ -1,8 +1,8 @@
 import { GetMapper } from 'database-builder';
-import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { DatabaseTransaction } from 'database-builder';
 import { DatabaseMigrationContract, Version } from '../..';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class DatabaseMigrationService extends DatabaseMigrationContract {
