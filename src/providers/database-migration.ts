@@ -7,9 +7,7 @@ import { DatabaseMigrationContract } from "./database-migration-contract";
 import { DatabaseMigrationBase } from "../utils/database-migration-base";
 import { DatabaseResettableContract } from "./database-resettable-contract";
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract{
 
     private _settings: DatabaseSettingsFactoryContract;
