@@ -1,5 +1,5 @@
 import { DatabaseMigration } from "./providers/database-migration";
-import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from "./dependency-injection-definition";
+import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE, IS_ENABLE_LOG } from "./dependency-injection-definition";
 import { ModuleWithProviders, NgModule, Provider, Type } from "@angular/core";
 import { DatabaseHelperService } from "./providers/database-helper-service";
 import { DatabaseMigrationContract } from "./providers/database-migration-contract";
@@ -28,12 +28,14 @@ export class DatabaseModule {
         settingsProvider: ProviderTyped<DatabaseSettingsFactoryContract>,
         isAvailableProvider: ProviderTyped<boolean>,
         databaseCreatorProvider: ProviderTyped<DatabaseCreatorContract>,
+        isEnableLogProvider: ProviderTyped<boolean>,
         databaseMigrationContract?: Type<DatabaseMigrationContract>
     ): ModuleWithProviders {
         const providers: Provider[] = [
             this.createProvider(DatabaseSettingsFactoryContract, settingsProvider),
             this.createProvider(IS_AVAILABLE_DATABASE, isAvailableProvider),
-            this.createProvider(DATABASE_CREATOR, databaseCreatorProvider)
+            this.createProvider(DATABASE_CREATOR, databaseCreatorProvider),
+            this.createProvider(IS_ENABLE_LOG, isEnableLogProvider),
         ];
         return this.forBase(providers, databaseMigrationContract);
     }

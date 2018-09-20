@@ -1,6 +1,6 @@
-import { DatabaseResult } from "database-builder";
+import { DatabaseBaseTransaction, DatabaseResult } from "database-builder";
 import { DatabaseManager } from "./database-manager";
-import { Crud, DatabaseObject, DatabaseTransaction, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from "database-builder";
+import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from "database-builder";
 import { DatabaseFactoryContract } from "./database-factory-contract";
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
@@ -25,10 +25,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return database;
     }
 
-    public newTransaction(successTransaction: () => void): Promise<DatabaseTransaction> {
+    public newTransaction(successTransaction: () => void): Promise<DatabaseBaseTransaction> {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
-                database.transaction((result: DatabaseTransaction) => {
+                database.transaction((result: DatabaseBaseTransaction) => {
                     resolve(result);
                 })
                     .then(x => {

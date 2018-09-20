@@ -1,3 +1,4 @@
+import { async, TestBed } from '@angular/core/testing';
 import { Classificacao } from './models/classificacao';
 import { SubRegiao } from './models/sub-regiao';
 import { Cidade } from './models/cidade';
@@ -6,7 +7,6 @@ import { Database, DatabaseModule } from '..';
 import { TestClazz } from './models/test-clazz';
 import { Uf } from './models/uf';
 import { Regiao } from './models/regiao';
-import { async, TestBed } from '@angular/core/testing';
 import { DatabaseMigrationService } from './provider/database-migration-service';
 import { DatabaseSettingsFactory } from './factory/database-settings-factory';
 import { TableMapper } from './mapper/table-mapper';
@@ -26,7 +26,6 @@ describe('Mapper', () => {
                     },
                     {
                         useFactory: (mapper: TableMapper) => {
-                            console.log(mapper.get(TestClazz));
                             return mapper.get(TestClazz) ? true : false;
                         },
                         deps: [TableMapper]
@@ -35,6 +34,9 @@ describe('Mapper', () => {
                     {
                         useClass: DatabaseCreatorFake
                         // useClass: SQLite
+                    },
+                    {
+                        useValue: false
                     },
                     DatabaseMigrationService
                 )
