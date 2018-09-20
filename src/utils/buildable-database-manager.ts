@@ -8,7 +8,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     constructor(
         databaseFactory: DatabaseFactoryContract,
         private _mapper: GetMapper,
-        public enableLog: boolean = true
+        protected enableLog: boolean = true
     ) {
         super(databaseFactory);
     }
