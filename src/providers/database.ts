@@ -1,3 +1,4 @@
+import { IS_ENABLE_LOG } from './../dependency-injection-definition';
 import { DatabaseMigration } from "./database-migration";
 import { Inject, Injectable, Injector } from "@angular/core";
 import { BuildableDatabaseManager } from "../utils/buildable-database-manager";
@@ -13,13 +14,15 @@ export class Database extends BuildableDatabaseManager {
 
     constructor(
         @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
+        @Inject(IS_ENABLE_LOG) isEnableLog: boolean,
         private _injector: Injector,
         databaseFactory: DatabaseFactoryContract,
         private _databaseMigration: DatabaseMigration
     ) {
         super(
             databaseFactory,
-            _injector.get(DatabaseSettingsFactoryContract).mapper(_injector)
+            _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
+            isEnableLog
         );
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }

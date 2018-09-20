@@ -1,8 +1,8 @@
-import { Observer } from "rxjs/Observer";
-import { Observable } from "rxjs/Observable";
+
 import * as momentNs from "moment";
 const moment = momentNs;
-import { DatabaseObject, DatabaseTransaction } from "database-builder";
+import { DatabaseBaseTransaction, DatabaseObject } from "database-builder";
+import { Observable, Observer } from "rxjs";
 
 export abstract class DatabaseMigrationBase {
 
@@ -28,7 +28,7 @@ export abstract class DatabaseMigrationBase {
     }
 
     protected abstract migrationExecute(
-        transation: DatabaseTransaction, control: { oldVersion: number, newVersion: number }): Promise<boolean>;
+        transation: DatabaseBaseTransaction, control: { oldVersion: number, newVersion: number }): Promise<boolean>;
 
     private checkTableVersion(database: DatabaseObject): Promise<any> {
         return new Promise<any>((resolve, reject) => {
@@ -88,7 +88,7 @@ export abstract class DatabaseMigrationBase {
 
     private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            database.transaction((transation: DatabaseTransaction) => {
+            database.transaction((transation: DatabaseBaseTransaction) => {
                 this.migrationExecute(transation, control)
                     .then(r => resolve(r))
                     .catch(er => reject(er));

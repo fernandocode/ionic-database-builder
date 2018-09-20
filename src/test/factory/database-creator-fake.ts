@@ -1,5 +1,5 @@
 import { DatabaseCreatorContract } from "../../model/database-creator-contract";
-import { DatabaseObject, DatabaseResult, DatabaseTransaction } from "database-builder";
+import { DatabaseBaseTransaction, DatabaseObject, DatabaseResult } from "database-builder";
 import { DatabaseConfig } from "../../model/database-config";
 
 export class DatabaseCreatorFake implements DatabaseCreatorContract {
@@ -14,14 +14,14 @@ export class DatabaseCreatorFake implements DatabaseCreatorContract {
                         resolve(this.resultFake());
                     });
                 },
-                transaction: (fn: (transaction: DatabaseTransaction) => void): Promise<any> => {
+                transaction: (fn: (transaction: DatabaseBaseTransaction) => void): Promise<any> => {
                     return new Promise<any>((resolve, reject) => {
-                        fn(<DatabaseTransaction>{
+                        fn(<DatabaseBaseTransaction>{
                             executeSql: (
                                 sql: string,
                                 values: any,
-                                success: (tx: DatabaseTransaction, result: DatabaseResult) => void,
-                                error: (tx: DatabaseTransaction, error: any) => void
+                                success: (tx: DatabaseBaseTransaction, result: DatabaseResult) => void,
+                                error: (tx: DatabaseBaseTransaction, error: any) => void
                             ): void => {
                                 this.executeFake(sql, values);
                                 success(void 0, this.resultFake());
@@ -35,7 +35,7 @@ export class DatabaseCreatorFake implements DatabaseCreatorContract {
     }
 
     private executeFake(sql: string, params: any) {
-        console.log(`sql: ${sql}, params: ${JSON.stringify(params)}`);
+        console.log(`Fake - sql: ${sql}, params: ${JSON.stringify(params)}`);
     }
 
     private resultFake(): DatabaseResult {
