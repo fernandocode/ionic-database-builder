@@ -9,6 +9,7 @@ import { SubRegiao } from "../models/sub-regiao";
 import { Regiao } from "../models/regiao";
 import { Classificacao } from "../models/classificacao";
 import { MapperBase } from "database-builder";
+import { PrimaryKeyType } from "database-builder/src/core/enums/primary-key-type";
 
 @Injectable()
 export class TableMapper extends MapperBase {
@@ -23,13 +24,13 @@ export class TableMapper extends MapperBase {
             }
         );
 
-        this.add(TestClazzRef, x => x.id, true);
-        this.add(TestClazz, x => x.id, true);
-        this.add(Regiao, x => x.codeImport, true);
-        this.add(SubRegiao, x => x.codeImport, true);
-        this.add(Uf, x => x.codeImport, true);
-        this.add(Cidade, x => x.codeImport, true);
-        this.add(Classificacao, x => x.codeImport, true);
-        this.add(Cliente, x => x.internalKey, true);
+        this.autoMapper(TestClazzRef, x => x.id, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(TestClazz, x => x.id, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Regiao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(SubRegiao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Uf, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Cidade, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Classificacao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Cliente, x => x.internalKey, PrimaryKeyType.AutoIncrement);
     }
 }
