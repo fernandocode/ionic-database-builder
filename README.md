@@ -2,7 +2,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/fernandocode/ionic-database-builder/issues)
 
 # ionic-database-builder
-Extended library from [database-builder](https://github.com/fernandocode/database-builder) to assist in creating and maintaining SQL commands. Allowing integrate execute commands with [SQLite ('@ionic-native/sqlite')](https://ionicframework.com/docs/native/sqlite/), [Web Sql](https://www.w3.org/TR/webdatabase/), etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.
+Ionic module for [database-builder](https://github.com/fernandocode/database-builder) library. Allowing integrate execute commands with [SQLite ('@ionic-native/sqlite')](https://ionicframework.com/docs/native/sqlite/), [Web Sql](https://www.w3.org/TR/webdatabase/), etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.
 
 # Getting Started
 
@@ -64,6 +64,10 @@ import { DatabaseHelper } from 'database-builder';
             {
                 // Declare the implementation of 'DatabaseCreatorContract' that you want to use, you can include a proxy, use libraries with different signatures, or create mocks for tests, etc.
                 useClass: SQLite
+            },
+            {
+                // Enable log SQL execute
+                useValue: false
             },
             // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
             DatabaseMigrationService
@@ -140,6 +144,10 @@ import { DatabaseModule } from 'ionic-database-builder';
             {
                 // Declare the implementation of 'DatabaseCreatorContract' that you want to use, you can include a proxy, use libraries with different signatures, or create mocks for tests, etc.
                 useClass: SQLite
+            },
+            {
+                // Enable log SQL execute
+                useValue: false
             },
             // implementation of "DatabaseMigrationContract" to estrategy migration upgrade versions database
             DatabaseMigrationService

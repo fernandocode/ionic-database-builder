@@ -94,15 +94,15 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Promise((resolve, reject) => {
             this.databaseInstance().then(database => {
                 const executable = new ExecutableBuilder(this.enableLog);
-                executable.execute({
+                executable.execute([{
                     query: sql,
                     params: params
-                } as QueryCompiled, database)
-                    .then((cursor: DatabaseResult) => {
-                        resolve(cursor);
+                } as QueryCompiled], database)
+                    .then((cursor: DatabaseResult[]) => {
+                        resolve(cursor[0]);
                     });
             })
-            .catch(reject);
+                .catch(reject);
         });
     }
 
@@ -110,7 +110,11 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
-                    resolve(new Query(typeT, alias, this._mapper.get(typeT), database, this.enableLog));
+                    const that = this;
+                    resolve(new Query(typeT, alias,
+                        (tKey: (new () => any) | string) => {
+                            return that._mapper.get(tKey);
+                        }, this._mapper.get(typeT).mapperTable, database, this.enableLog));
                 }, reject)
                 .catch(reject);
         });

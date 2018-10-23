@@ -106,11 +106,11 @@ describe('Mapper', () => {
         const database: Database = TestBed.get(Database);
         database.crud().then(crud => {
             const result = crud.insert(Cliente, clienteToSave).compile();
-            expect(result.params.toString()).toEqual([
+            expect(result[0].params.toString()).toEqual([
                 clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
                 clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
             ].toString());
-            expect(result.query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
+            expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
         });
     }));
 
@@ -122,11 +122,11 @@ describe('Mapper', () => {
         database.beginTransaction().then(crud => {
             try {
                 const result = crud.insert(Cliente, clienteToSave).compile();
-                expect(result.params.toString()).toEqual([
+                expect(result[0].params.toString()).toEqual([
                     clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
                     clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
                 ].toString());
-                expect(result.query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
+                expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
                 database.commitTransaction().then(x => {
                     expect(x).toEqual(true);
                 }).catch(rollback);
