@@ -1,6 +1,6 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.2.0-ionic4-beta.3",
+  "version": "0.2.0-ionic4-beta.4",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands. Allowing integrate execute commands with SQLite ('@ionic-native/sqlite'), Web Sql, etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.",
   "main": "index.js",
   "scripts": {
@@ -46,18 +46,22 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
     "@angular/core": "~6.1.1",
-    "database-builder": "0.1.0-rc.2"
+    "database-builder": ">=0.1.0-rc.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.8.5",
     "@angular/cli": "~6.2.5",
+    "@angular/common": "~6.1.1",
     "@angular/compiler": "~6.1.1",
     "@angular/compiler-cli": "~6.1.1",
     "@angular/language-service": "~6.1.1",
+    "@angular/platform-browser": "~6.1.1",
+    "@angular/platform-browser-dynamic": "~6.1.1",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~10.12.0",
     "codelyzer": "~4.5.0",
+    "core-js": "^2.5.3",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.0.0",
@@ -65,17 +69,14 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "4.1.1",
     "protractor": "~5.4.0",
+    "rxjs": "6.2.2",
     "ts-node": "~7.0.0",
+    "tsickle": "0.27.5",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2",
-    "@angular/platform-browser": "~6.1.1",
-    "@angular/platform-browser-dynamic": "~6.1.1",
-    "ng-packagr": "4.1.1",
-    "tsickle": "0.27.5",
-    "rxjs": "6.2.2",
-    "zone.js": "^0.8.26",
-    "core-js": "^2.5.3"
+    "zone.js": "^0.8.26"
   },
   "tsconfig": "./tsconfig.json"
 }
