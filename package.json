@@ -1,6 +1,6 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.2.0-ionic4-beta.4",
+  "version": "0.2.0-ionic4-rc.1",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands. Allowing integrate execute commands with SQLite ('@ionic-native/sqlite'), Web Sql, etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "e2e": "ng e2e",
     "packagr": "ng-packagr -p ng-package.json",
     "publish-npm": "npm run packagr && npm publish dist",
-    "publish-npm-beta": "npm run packagr && npm publish dist --tag ionic4-beta"
+    "publish-npm-ionic4": "npm run packagr && npm publish dist --tag ionic4-rc"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
     "@angular/core": "~6.1.1",
-    "database-builder": ">=0.1.0-rc.4"
+    "database-builder": "0.1.0-rc.11"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.8.5",

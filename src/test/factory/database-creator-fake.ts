@@ -1,6 +1,4 @@
-import { DatabaseCreatorContract } from "../../model/database-creator-contract";
-import { DatabaseBaseTransaction, DatabaseObject, DatabaseResult } from "database-builder";
-import { DatabaseConfig } from "../../model/database-config";
+import { DatabaseBaseTransaction, DatabaseConfig, DatabaseCreatorContract, DatabaseObject, DatabaseResult } from "database-builder";
 
 export class DatabaseCreatorFake implements DatabaseCreatorContract {
 
@@ -19,12 +17,12 @@ export class DatabaseCreatorFake implements DatabaseCreatorContract {
                         fn(<DatabaseBaseTransaction>{
                             executeSql: (
                                 sql: string,
-                                values: any,
-                                success: (tx: DatabaseBaseTransaction, result: DatabaseResult) => void,
-                                error: (tx: DatabaseBaseTransaction, error: any) => void
-                            ): void => {
+                                values: any
+                            ): Promise<any> => {
                                 this.executeFake(sql, values);
-                                success(void 0, this.resultFake());
+                                return new Promise<DatabaseResult>((_resolve, _reject) => {
+                                    _resolve(this.resultFake());
+                                });
                             },
                         })
                         resolve(void 0);
