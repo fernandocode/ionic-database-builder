@@ -1,8 +1,7 @@
 import { Inject } from "@angular/core";
 import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
-import { DatabaseCreatorContract } from "../model/database-creator-contract";
-import { DatabaseObject } from "database-builder";
+import { DatabaseCreatorContract, DatabaseObject } from "database-builder";
 
 export class DatabaseFactoryDefault extends DatabaseFactoryContract {
 

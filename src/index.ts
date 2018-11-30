@@ -7,5 +7,3 @@ export * from "./providers/database-migration-contract";
 export * from "./providers/database-migration";
 export * from "./providers/database-helper-service";
 export * from "./model/version-model";
-export * from "./model/database-creator-contract";
-export * from "./model/database-config";

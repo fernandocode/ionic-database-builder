@@ -8,7 +8,7 @@ import { Database } from "./providers/database";
 import { DatabaseSettingsFactoryContract } from "./utils/database-settings-factory-contract";
 import { DatabaseFactoryContract } from "./utils/database-factory-contract";
 import { DatabaseFactoryDefault } from "./defaults/database-factory-default";
-import { DatabaseCreatorContract } from "./model/database-creator-contract";
+import { DatabaseCreatorContract } from "database-builder";
 
 @NgModule({
     providers: [
