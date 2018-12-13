@@ -11,6 +11,7 @@ import { DatabaseMigrationService } from './provider/database-migration-service'
 import { DatabaseSettingsFactory } from './factory/database-settings-factory';
 import { TableMapper } from './mapper/table-mapper';
 import { DatabaseCreatorFake } from './factory/database-creator-fake';
+import { DatabaseBrowserProvider } from './factory/database-browser';
 
 describe('Mapper', () => {
 
@@ -32,7 +33,8 @@ describe('Mapper', () => {
                         // useValue: true
                     },
                     {
-                        useClass: DatabaseCreatorFake
+                        useClass: DatabaseBrowserProvider
+                        // useClass: DatabaseCreatorFake
                         // useClass: SQLite
                     },
                     {
@@ -77,7 +79,7 @@ describe('Mapper', () => {
 
     const clienteToSave = {
         codeImport: 1,
-        razaoSocial: 'Razão',
+        razaoSocial: void 0,
         apelido: 'Apelido',
         cidade: {
             codeImport: 2,
@@ -102,39 +104,46 @@ describe('Mapper', () => {
         desativo: false
     } as Cliente;
 
-    it('Test mapper insert T', async(() => {
+    it('Test mapper insert T', async () => {
         const database: Database = TestBed.get(Database);
-        database.crud().then(crud => {
+        const crud = await database.crud();
+        const insert = crud.insert(Cliente, clienteToSave);
+        const result = insert.compile();
+        expect(result[0].params.toString()).toEqual([
+            clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+            clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
+        ].toString());
+        expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
+
+        const insertResult = await insert.execute();
+        console.log(insertResult);
+
+        const queryResultNull = await crud.query(Cliente)
+            .where(where => where.isNull(x => x.razaoSocial))
+            .toList();
+
+        expect(queryResultNull.length).toEqual(1);
+    });
+
+    it('Test transaction mapper insert T', async () => {
+        const database: Database = TestBed.get(Database);
+        let rollback = () => {
+            database.rollbackTransaction().then().catch();
+        }
+        const crud = await database.beginTransaction()
+        try {
             const result = crud.insert(Cliente, clienteToSave).compile();
             expect(result[0].params.toString()).toEqual([
                 clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
                 clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
             ].toString());
             expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-        });
-    }));
-
-    it('Test transaction mapper insert T', async(() => {
-        const database: Database = TestBed.get(Database);
-        let rollback = () => {
-            database.rollbackTransaction().then().catch();
+            const commitResult = await database.commitTransaction()
+            expect(commitResult).toEqual(true);
         }
-        database.beginTransaction().then(crud => {
-            try {
-                const result = crud.insert(Cliente, clienteToSave).compile();
-                expect(result[0].params.toString()).toEqual([
-                    clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
-                    clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
-                ].toString());
-                expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-                database.commitTransaction().then(x => {
-                    expect(x).toEqual(true);
-                }).catch(rollback);
-            }
-            catch (e) {
-                rollback();
-            }
-        });
-    }));
+        catch (e) {
+            rollback();
+        }
+    });
 
 });
