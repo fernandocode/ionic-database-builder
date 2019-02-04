@@ -1,18 +1,18 @@
-import { GetMapper } from 'database-builder';
+import { GetMapper, DatabaseObject } from 'database-builder';
 import { Injectable } from '@angular/core';
-import { DatabaseTransaction } from 'database-builder';
-import { DatabaseMigrationContract, Version } from '../..';
 import { Observable } from 'rxjs';
 import { DatabaseResettableContract } from '../../providers/database-resettable-contract';
+import { Version } from '../../model/version-model';
+import { DatabaseMigrationContract } from '../../providers/database-migration-contract';
 
 @Injectable()
 export class DatabaseMigrationService extends DatabaseMigrationContract {
 
-    public to(version: Version, transation: DatabaseTransaction, mappers: GetMapper, resettable: DatabaseResettableContract): Observable<any>[] {
+    public to(version: Version, database: DatabaseObject, mappers: GetMapper, resettable: DatabaseResettableContract): Observable<any>[] {
         const observablesNested: Observable<any>[] = [];
 
         if (!(window as any)._resetCalled) {
-            resettable.reset(transation);
+            resettable.reset(database);
             (window as any)._resetCalled = true;
         }
 

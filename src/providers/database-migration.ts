@@ -2,13 +2,13 @@ import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
 import { forkJoin, from, Observable, Observer } from "rxjs";
 import { Injectable, Injector, Optional } from "@angular/core";
-import { DatabaseTransaction, Ddl } from "database-builder";
+import { Ddl, DatabaseObject } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";
 import { DatabaseMigrationBase } from "../utils/database-migration-base";
 import { DatabaseResettableContract } from "./database-resettable-contract";
 
 @Injectable()
-export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract{
+export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract {
 
     private _settings: DatabaseSettingsFactoryContract;
 
@@ -20,7 +20,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
-    public reset(transation: DatabaseTransaction): Observable<any> {
+    public reset(database: DatabaseObject): Observable<any> {
 
         // tslint:disable-next-line:no-console
         console.info("database reset");
@@ -30,7 +30,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         const mappers = this._settings.mapper(this._injector);
 
         // remove dados offline da versão anterior, pois o formato dos dados foi alterado de uma versão para a outra
-        const ddl = new Ddl(transation, mappers, true);
+        const ddl = new Ddl(database, mappers, true);
         mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
                 observablesWait.push(from(ddl.drop(value.newable).execute()));
@@ -41,14 +41,14 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         return forkJoin(observablesWait);
     }
 
-    protected migrationExecute(transation: DatabaseTransaction, version: Version): Promise<boolean> {
+    protected migrationExecute(database: DatabaseObject, version: Version): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
 
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
                 const toObservables = this._databaseMigrationContract.to(
-                    version, 
-                    transation, 
+                    version,
+                    database,
                     this._settings.mapper(this._injector),
                     this
                 );
@@ -58,23 +58,24 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
             }
 
             if (observablesNested.length === 0 && version.oldVersion < 1) {
-                observablesNested.push(this.reset(transation));
+                observablesNested.push(this.reset(database));
             }
 
-            this.callNested(observablesNested, 0).subscribe(result => {
-                resolve(result);
-            }, error => reject(error));
+            this.callNested(observablesNested, 0)
+                .subscribe((result: boolean | PromiseLike<boolean>) => {
+                    resolve(result);
+                }, (error: any) => reject(error));
         });
     }
 
     private callNested(observablesNested: Array<Observable<any>>, nextIndex: number): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
             if (observablesNested.length > nextIndex) {
-                observablesNested[nextIndex].subscribe(result => {
-                    this.callNested(observablesNested, ++nextIndex).subscribe(_ => {
+                observablesNested[nextIndex].subscribe((result: any) => {
+                    this.callNested(observablesNested, ++nextIndex).subscribe((_: any) => {
                         observer.next(true);
                         observer.complete();
-                    }, error => {
+                    }, (error: any) => {
                         observer.error(error);
                         observer.complete();
                     });

@@ -1,6 +1,6 @@
 import * as momentNs from "moment";
 const moment = momentNs;
-import { DatabaseBaseTransaction, DatabaseObject } from "database-builder";
+import { DatabaseObject } from "database-builder";
 import { Observable, Observer } from "rxjs";
 
 export abstract class DatabaseMigrationBase {
@@ -9,11 +9,11 @@ export abstract class DatabaseMigrationBase {
         return new Promise<boolean>((resolve, reject) => {
             this.checkTableVersion(database).then(_ => {
                 this.checkVersion(database, version)
-                    .subscribe(result => {
+                    .subscribe((result: { oldVersion: number; newVersion: number; }) => {
                         this.migration(database, result)
                             .then(r => resolve(r))
                             .catch(er => reject(er));
-                    }, er => reject(er));
+                    }, (er: any) => reject(er));
             })
                 .catch(er => reject(er));
         });
@@ -27,7 +27,8 @@ export abstract class DatabaseMigrationBase {
     }
 
     protected abstract migrationExecute(
-        transation: DatabaseBaseTransaction, control: { oldVersion: number, newVersion: number }): Promise<boolean>;
+        database: DatabaseObject, control: { oldVersion: number, newVersion: number }
+    ): Promise<boolean>;
 
     private checkTableVersion(database: DatabaseObject): Promise<any> {
         return new Promise<any>((resolve, reject) => {
@@ -44,7 +45,7 @@ export abstract class DatabaseMigrationBase {
 
     private checkVersion(database: DatabaseObject, newVersion: number): Observable<{ oldVersion: number, newVersion: number }> {
         return Observable.create((observer: Observer<any>) => {
-            this.getVersion(database).subscribe(oldVersion => {
+            this.getVersion(database).subscribe((oldVersion: number) => {
                 if (oldVersion > 0) {
                     if (newVersion > oldVersion) {
                         // tslint:disable-next-line:no-console
@@ -87,11 +88,14 @@ export abstract class DatabaseMigrationBase {
 
     private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            database.transaction((transation: DatabaseBaseTransaction) => {
-                this.migrationExecute(transation, control)
-                    .then(r => resolve(r))
-                    .catch(er => reject(er));
-            });
+            this.migrationExecute(database, control)
+                .then(r => resolve(r))
+                .catch(er => reject(er));
+            // database.transaction((transation: DatabaseBaseTransaction) => {
+            //     this.migrationExecute(transation, control)
+            //         .then(r => resolve(r))
+            //         .catch(er => reject(er));
+            // });
         });
     }
 }

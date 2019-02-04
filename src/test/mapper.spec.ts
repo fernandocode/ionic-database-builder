@@ -10,7 +10,6 @@ import { Regiao } from './models/regiao';
 import { DatabaseMigrationService } from './provider/database-migration-service';
 import { DatabaseSettingsFactory } from './factory/database-settings-factory';
 import { TableMapper } from './mapper/table-mapper';
-import { DatabaseCreatorFake } from './factory/database-creator-fake';
 import { DatabaseBrowserProvider } from './factory/database-browser';
 
 describe('Mapper', () => {

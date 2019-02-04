@@ -1,6 +1,6 @@
-import { DatabaseTransaction } from "database-builder";
+import { DatabaseObject } from "database-builder";
 import { Observable } from "rxjs";
 
 export interface DatabaseResettableContract{
-    reset(transation: DatabaseTransaction): Observable<any>;
+    reset(database: DatabaseObject): Observable<any>;
 }
