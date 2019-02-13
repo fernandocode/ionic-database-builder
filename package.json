@@ -45,7 +45,7 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {
     "@angular/core": "^5.0.0",
-    "database-builder": ">=0.1.0-beta.17"
+    "database-builder": ">=0.1.0-rc.26"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.4",

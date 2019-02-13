@@ -122,9 +122,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public ddl(): Promise<Ddl> {
         return new Promise((resolve, reject) => {
-            this.databaseInstance().then(database => {
-                resolve(new Ddl(database, this._mapper, this.enableLog));
-            })
+            this.databaseInstance()
+                .then(database => {
+                    resolve(new Ddl(database, this._mapper, this.enableLog));
+                })
                 .catch(reject);
         });
     }

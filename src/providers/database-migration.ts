@@ -33,8 +33,10 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         const ddl = new Ddl(database, mappers, true);
         mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
-                observablesWait.push(Observable.fromPromise(ddl.drop(value.newable).execute()));
-                observablesWait.push(Observable.fromPromise(ddl.create(value.newable).execute()));
+                observablesWait.push(ddl.drop(value.newable).executeObserver());
+                observablesWait.push(ddl.create(value.newable).executeObserver());
+                // observablesWait.push(Observable.fromPromise(ddl.drop(value.newable).execute()));
+                // observablesWait.push(Observable.fromPromise(ddl.create(value.newable).execute()));
             }
         });
 
