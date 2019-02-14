@@ -6,6 +6,7 @@ import { DatabaseSettingsFactoryContract } from "..";
 import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DatabaseObject } from "database-builder";
 import { IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
+import { Observable, Observer } from 'rxjs';
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
@@ -27,12 +28,14 @@ export class Database extends BuildableDatabaseManager {
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
-    protected migrationVersion(database: DatabaseObject, version: number): Promise<boolean> {
+    protected migrationVersion(database: DatabaseObject, version: number): Observable<boolean> {
         if (this._isAvailable) {
             return this._databaseMigration.version(database, version);
         }
-        return new Promise<boolean>((resolve, reject) => {
-            resolve(true);
+        return Observable.create((observer: Observer<boolean>) => {
+            // return new Promise<boolean>((resolve, reject) => {
+            observer.next(true);
+            observer.complete();
         });
     }
 

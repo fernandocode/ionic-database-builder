@@ -3,6 +3,7 @@ import { DatabaseFactoryContract } from "../utils/database-factory-contract";
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from "../dependency-injection-definition";
 import { DatabaseCreatorContract } from "../model/database-creator-contract";
 import { DatabaseObject } from "database-builder";
+import { Observable, Observer } from "rxjs";
 
 export class DatabaseFactoryDefault extends DatabaseFactoryContract {
 
@@ -13,17 +14,24 @@ export class DatabaseFactoryDefault extends DatabaseFactoryContract {
         super();
     }
 
-    public database(databaseName: string): Promise<DatabaseObject> {
-        return new Promise<DatabaseObject>((resolve, reject) => {
+    public database(databaseName: string): Observable<DatabaseObject> {
+        return Observable.create((observer: Observer<DatabaseObject>) => {
             if (this._isAvailable) {
-                resolve(
-                    this._databaseCreator.create({
-                        name: databaseName,
-                        location: "default"
+                this._databaseCreator.create({
+                    name: databaseName,
+                    location: "default"
+                })
+                    .then(database => {
+                        observer.next(database);
+                        observer.complete();
                     })
-                );
+                    .catch(err => {
+                        observer.error(err);
+                        observer.complete();
+                    });
             } else {
-                resolve(void 0);
+                observer.next(void 0);
+                observer.complete();
             }
         });
     }

@@ -1,11 +1,11 @@
-import { DatabaseSettingsFactoryContract } from "..";
 import { Version } from "./../model/version-model";
 import { Observable, Observer } from "rxjs";
 import { Injectable, Injector, Optional } from "@angular/core";
-import { Ddl, DatabaseObject } from "database-builder";
+import { Ddl, DatabaseObject, forkJoinSafe } from "database-builder";
 import { DatabaseMigrationContract } from "./database-migration-contract";
 import { DatabaseMigrationBase } from "../utils/database-migration-base";
 import { DatabaseResettableContract } from "./database-resettable-contract";
+import { DatabaseSettingsFactoryContract } from "../utils/database-settings-factory-contract";
 
 @Injectable()
 export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract {
@@ -33,18 +33,19 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         const ddl = new Ddl(database, mappers, true);
         mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
-                observablesWait.push(ddl.drop(value.newable).executeObserver());
-                observablesWait.push(ddl.create(value.newable).executeObserver());
+                observablesWait.push(ddl.drop(value.newable).execute());
+                observablesWait.push(ddl.create(value.newable).execute());
                 // observablesWait.push(Observable.fromPromise(ddl.drop(value.newable).execute()));
                 // observablesWait.push(Observable.fromPromise(ddl.create(value.newable).execute()));
             }
         });
 
-        return Observable.forkJoin(observablesWait);
+        return forkJoinSafe(observablesWait);
     }
 
-    protected migrationExecute(database: DatabaseObject, version: Version): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
+    protected migrationExecute(database: DatabaseObject, version: Version): Observable<boolean> {
+        return Observable.create((observer: Observer<boolean>) => {
+            // return new Promise<boolean>((resolve, reject) => {
 
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
@@ -64,9 +65,13 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
             }
 
             this.callNested(observablesNested, 0)
-                .subscribe((result: boolean | PromiseLike<boolean>) => {
-                    resolve(result);
-                }, (error: any) => reject(error));
+                .subscribe((result: boolean) => {
+                    observer.next(result);
+                    observer.complete();
+                }, (error: any) => {
+                    observer.error(error);
+                    observer.complete();
+                });
         });
     }
 

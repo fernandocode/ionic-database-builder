@@ -6,17 +6,19 @@ import { Observable, Observer } from "rxjs";
 
 export abstract class DatabaseMigrationBase {
 
-    public version(database: DatabaseObject, version: number): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            this.checkTableVersion(database).then(_ => {
-                this.checkVersion(database, version)
-                    .subscribe((result: { oldVersion: number; newVersion: number; }) => {
-                        this.migration(database, result)
-                            .then(r => resolve(r))
-                            .catch(er => reject(er));
-                    }, (er: any) => reject(er));
-            })
-                .catch(er => reject(er));
+    public version(database: DatabaseObject, version: number): Observable<boolean> {
+        return Observable.create((observer: Observer<boolean>) => {
+            this.checkTableVersion(database)
+                .subscribe(_ => {
+                    this.checkVersion(database, version)
+                        .subscribe((result: { oldVersion: number; newVersion: number; }) => {
+                            this.migration(database, result)
+                                .subscribe(r => {
+                                    observer.next(r);
+                                    observer.complete();
+                                }, err => this.error(err, observer));
+                        }, err => this.error(err, observer));
+                }, err => this.error(err, observer));
         });
     }
 
@@ -29,18 +31,21 @@ export abstract class DatabaseMigrationBase {
 
     protected abstract migrationExecute(
         database: DatabaseObject, control: { oldVersion: number, newVersion: number }
-    ): Promise<boolean>;
+    ): Observable<boolean>;
 
-    private checkTableVersion(database: DatabaseObject): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    private checkTableVersion(database: DatabaseObject): Observable<any> {
+        return Observable.create((observer: Observer<any>) => {
+            // return new Promise<any>((resolve, reject) => {
             const scriptTableVersion = `CREATE TABLE IF NOT EXISTS MigrationVersion(
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
                     , data INTEGER
                     , version TEXT
                     );`;
             database.executeSql(scriptTableVersion, {})
-                .then(resolve)
-                .catch(reject);
+                .then(result => {
+                    observer.next(result);
+                    observer.complete();
+                }, err => this.error(err, observer));
         });
     }
 
@@ -87,16 +92,14 @@ export abstract class DatabaseMigrationBase {
         });
     }
 
-    private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
+    private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Observable<boolean> {
+        return Observable.create((observer: Observer<boolean>) => {
+            // return new Promise<boolean>((resolve, reject) => {
             this.migrationExecute(database, control)
-                .then(r => resolve(r))
-                .catch(er => reject(er));
-            // database.transaction((transation: DatabaseBaseTransaction) => {
-            //     this.migrationExecute(transation, control)
-            //         .then(r => resolve(r))
-            //         .catch(er => reject(er));
-            // });
+                .subscribe(result => {
+                    observer.next(result);
+                    observer.complete();
+                }, err => this.error(err, observer));
         });
     }
 }

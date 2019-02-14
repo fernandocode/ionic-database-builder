@@ -104,37 +104,50 @@ describe('Mapper', () => {
 
     it('Test mapper insert T', async(() => {
         const database: Database = TestBed.get(Database);
-        database.crud().then(crud => {
-            const result = crud.insert(Cliente, clienteToSave).compile();
-            expect(result[0].params.toString()).toEqual([
-                clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
-                clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
-            ].toString());
-            expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-        });
-    }));
-
-    it('Test transaction mapper insert T', async(() => {
-        const database: Database = TestBed.get(Database);
-        let rollback = () => {
-            database.rollbackTransaction().then().catch();
-        }
-        database.beginTransaction().then(crud => {
-            try {
+        database.crud()
+            .subscribe(crud => {
                 const result = crud.insert(Cliente, clienteToSave).compile();
                 expect(result[0].params.toString()).toEqual([
                     clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
                     clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
                 ].toString());
                 expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-                database.commitTransaction().then(x => {
-                    expect(x).toEqual(true);
-                }).catch(rollback);
-            }
-            catch (e) {
-                rollback();
-            }
-        });
+            }, err => {
+                new Error(err);
+            });
+    }));
+
+    it('Test transaction mapper insert T', async(() => {
+        const database: Database = TestBed.get(Database);
+        let rollback = () => {
+            database.rollbackTransaction()
+                .subscribe(_ => _,
+                    err => {
+                        new Error(err);
+                    });
+        }
+        database.beginTransaction()
+            .subscribe(crud => {
+                try {
+                    const result = crud.insert(Cliente, clienteToSave).compile();
+                    expect(result[0].params.toString()).toEqual([
+                        clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+                        clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
+                    ].toString());
+                    expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
+                    database.commitTransaction()
+                        .subscribe(x => {
+                            expect(x).toEqual(true);
+                        }, err => {
+                            rollback()
+                        });
+                }
+                catch (e) {
+                    rollback();
+                }
+            }, err => {
+                new Error(err);
+            });
     }));
 
 });
