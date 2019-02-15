@@ -18,7 +18,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return this._mapper;
     }
 
-    public databaseInstance(): Observable<DatabaseObject> {
+    public databaseInstance(): Promise<DatabaseObject> {
         const database = super.databaseInstance(this.databaseName(), this.version());
         if (!database) {
             throw new Error("SQLite not avaliable!");
@@ -29,7 +29,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     public newTransaction(successTransaction: () => void): Observable<DatabaseBaseTransaction> {
         return Observable.create((observer: Observer<DatabaseBaseTransaction>) => {
             this.databaseInstance()
-                .subscribe(database => {
+                .then(database => {
                     database.transaction((result: DatabaseBaseTransaction) => {
                         observer.next(result);
                         observer.complete();
@@ -41,7 +41,8 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                             observer.error(error);
                             observer.complete();
                         });
-                }, err => {
+                })
+                .catch(err => {
                     observer.error(err);
                     observer.complete();
                 });
@@ -118,11 +119,12 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return Observable.create((observer: Observer<Crud>) => {
             // return new Promise((resolve, reject) => {
             this.databaseInstance()
-                .subscribe(database => {
+                .then(database => {
                     observer.next(new Crud(database, this._mapper, this.enableLog));
                     observer.complete();
                     // resolve(new Crud(database, this._mapper, this.enableLog));
-                }, error => { observer.error(error); observer.complete(); });
+                })
+                .catch(error => { observer.error(error); observer.complete(); });
         });
     }
 
@@ -130,7 +132,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return Observable.create((observer: Observer<DatabaseResult>) => {
             // return new Promise((resolve, reject) => {
             this.databaseInstance()
-                .subscribe(database => {
+                .then(database => {
                     const executable = new ExecutableBuilder(this.enableLog);
                     executable.execute([{
                         query: sql,
@@ -143,7 +145,8 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                             observer.error(err);
                             observer.complete();
                         });
-                }, err => {
+                })
+                .catch(err => {
                     observer.error(err);
                     observer.complete();
                 });
@@ -154,14 +157,15 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return Observable.create((observer: Observer<Query<T>>) => {
             // return new Promise((resolve, reject) => {
             this.databaseInstance()
-                .subscribe(database => {
+                .then(database => {
                     const that = this;
                     observer.next(new Query(typeT, alias,
                         (tKey: (new () => any) | string) => {
                             return that._mapper.get(tKey);
                         }, this._mapper.get(typeT).mapperTable, database, this.enableLog));
                     observer.complete();
-                }, error => {
+                })
+                .catch(error => {
                     observer.error(error);
                     observer.complete();
                 });
@@ -172,10 +176,11 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return Observable.create((observer: Observer<Ddl>) => {
             // return new Promise((resolve, reject) => {
             this.databaseInstance()
-                .subscribe(database => {
+                .then(database => {
                     observer.next(new Ddl(database, this._mapper, this.enableLog));
                     observer.complete();
-                }, error => {
+                })
+                .catch(error => {
                     observer.error(error);
                     observer.complete();
                 });
