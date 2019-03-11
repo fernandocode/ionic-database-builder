@@ -21,25 +21,32 @@ describe('Mapper', () => {
             ],
             imports: [
                 DatabaseModule.forRoot(
-                    {
-                        useClass: DatabaseSettingsFactory
-                    },
-                    {
-                        useFactory: (mapper: TableMapper) => {
-                            return mapper.get(TestClazz) ? true : false;
-                        },
-                        deps: [TableMapper]
-                        // useValue: true
-                    },
-                    {
-                        useClass: DatabaseCreatorFake
-                        // useClass: SQLite
-                    },
-                    {
-                        useValue: false
-                    },
+                    DatabaseSettingsFactory,
+                    true,
+                    DatabaseCreatorFake,
+                    false,
                     DatabaseMigrationService
                 )
+                // DatabaseModule.forRoot(
+                //     {
+                //         useClass: DatabaseSettingsFactory
+                //     },
+                //     {
+                //         useFactory: (mapper: TableMapper) => {
+                //             return mapper.get(TestClazz) ? true : false;
+                //         },
+                //         deps: [TableMapper]
+                //         // useValue: true
+                //     },
+                //     {
+                //         useClass: DatabaseCreatorFake
+                //         // useClass: SQLite
+                //     },
+                //     {
+                //         useValue: false
+                //     },
+                //     DatabaseMigrationService
+                // )
                 // DatabaseModule.forRootValue(
                 //     // object to simple settings database
                 //     new DatabaseSettingsFactoryDefault(

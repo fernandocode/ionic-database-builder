@@ -38,25 +38,18 @@ export abstract class DatabaseManager {
     protected abstract migrationVersion(database: DatabaseObject, version: number): Observable<boolean>;
 
     private createDatabase(name: string, version: number): Promise<DatabaseObject> {
-        // return Observable.create((observer: Observer<DatabaseObject>) => {
         return new Promise<DatabaseObject>((resolve, reject) => {
             this.databaseFactory.database(name)
                 .subscribe((database: DatabaseObject) => {
                     this.migrationVersion(database, version)
                         .subscribe(_ => {
                             resolve(database);
-                            // observer.next(database);
-                            // observer.complete();
                         }, err => {
                             reject(err);
-                            // observer.error(err);
-                            // observer.complete();
                         });
                 }, err => {
                     this.catchException(err);
                     reject(err);
-                    // observer.error(err);
-                    // observer.complete();
                 });
 
         });

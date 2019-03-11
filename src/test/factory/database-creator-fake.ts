@@ -1,5 +1,4 @@
-import { DatabaseCreatorContract } from "../../model/database-creator-contract";
-import { DatabaseBaseTransaction, DatabaseObject, DatabaseResult } from "database-builder";
+import { DatabaseBaseTransaction, DatabaseObject, DatabaseResult, DatabaseCreatorContract } from "database-builder";
 import { DatabaseConfig } from "../../model/database-config";
 
 export class DatabaseCreatorFake implements DatabaseCreatorContract {
