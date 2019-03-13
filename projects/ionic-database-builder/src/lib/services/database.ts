@@ -7,11 +7,7 @@ import { Observable, Observer } from 'rxjs';
 import { IS_AVAILABLE_DATABASE, IS_ENABLE_LOG } from '../utils/dependency-injection-definition';
 import { DatabaseSettingsFactoryContract } from '../utils/database-settings-factory-contract';
 
-@Injectable(
-    // {
-    //     providedIn: 'root'
-    // }
-)
+@Injectable()
 export class Database extends BuildableDatabaseManager {
 
     private _settings: DatabaseSettingsFactoryContract;
@@ -36,7 +32,6 @@ export class Database extends BuildableDatabaseManager {
             return this._databaseMigration.version(database, version);
         }
         return Observable.create((observer: Observer<boolean>) => {
-            // return new Promise<boolean>((resolve, reject) => {
             observer.next(true);
             observer.complete();
         });

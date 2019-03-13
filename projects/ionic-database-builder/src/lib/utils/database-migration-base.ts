@@ -94,7 +94,6 @@ export abstract class DatabaseMigrationBase {
 
     private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
-            // return new Promise<boolean>((resolve, reject) => {
             this.migrationExecute(database, control)
                 .subscribe(result => {
                     observer.next(result);

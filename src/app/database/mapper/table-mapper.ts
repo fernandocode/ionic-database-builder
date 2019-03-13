@@ -11,9 +11,7 @@ import { MapperBase } from "database-builder";
 import { PrimaryKeyType } from "database-builder/src/core/enums/primary-key-type";
 import { DatabaseHelperService } from 'ionic-database-builder';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TableMapper extends MapperBase {
 
     constructor(_databaseHelper: DatabaseHelperService) {
@@ -30,7 +28,7 @@ export class TableMapper extends MapperBase {
         this.autoMapper(TestClazz, x => x.id, PrimaryKeyType.AutoIncrement);
         this.autoMapper(Regiao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
         this.autoMapper(SubRegiao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
-        this.autoMapper(Uf, x => x.codeImport, PrimaryKeyType.AutoIncrement);
+        this.autoMapper(Uf, x => x.codeImport, PrimaryKeyType.Assigned);
         this.autoMapper(Cidade, x => x.codeImport, PrimaryKeyType.AutoIncrement);
         this.autoMapper(Classificacao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
         this.autoMapper(Cliente, x => x.internalKey, PrimaryKeyType.AutoIncrement);

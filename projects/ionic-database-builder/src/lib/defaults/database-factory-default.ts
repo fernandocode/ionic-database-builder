@@ -4,9 +4,7 @@ import { DatabaseObject, DatabaseCreatorContract } from "database-builder";
 import { Observable, Observer } from "rxjs";
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from '../utils/dependency-injection-definition';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class DatabaseFactoryDefault extends DatabaseFactoryContract {
 
     constructor(

@@ -46,15 +46,11 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                     observer.error(err);
                     observer.complete();
                 });
-            // .catch(error => {
-            //     reject(error);
-            // });
         });
     }
 
     public transaction(successTransaction: () => void): Observable<Crud> {
         return Observable.create((observer: Observer<Crud>) => {
-            // return new Promise((resolve, reject) => {
             this.newTransaction(successTransaction)
                 .subscribe((transaction) => {
                     observer.next(new Crud(transaction, this._mapper, this.enableLog));
@@ -87,12 +83,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public commitTransaction(): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
-            // return new Promise((resolve, reject) => {
             this.sql("COMMIT")
                 .subscribe(r => {
                     observer.next(true);
                     observer.complete();
-                    // resolve(true);
                 }, error => {
                     observer.error(error);
                     observer.complete();
@@ -102,12 +96,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public rollbackTransaction(): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
-            // return new Promise((resolve, reject) => {
             this.sql("ROLLBACK")
                 .subscribe(r => {
                     observer.next(true);
                     observer.complete();
-                    // resolve(true);
                 }, error => {
                     observer.error(error);
                     observer.complete();
@@ -117,12 +109,10 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public crud(): Observable<Crud> {
         return Observable.create((observer: Observer<Crud>) => {
-            // return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
                     observer.next(new Crud(database, this._mapper, this.enableLog));
                     observer.complete();
-                    // resolve(new Crud(database, this._mapper, this.enableLog));
                 })
                 .catch(error => { observer.error(error); observer.complete(); });
         });
@@ -130,7 +120,6 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public sql(sql: string, params: any[] = []): Observable<DatabaseResult> {
         return Observable.create((observer: Observer<DatabaseResult>) => {
-            // return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
                     const executable = new ExecutableBuilder(this.enableLog);
@@ -155,7 +144,6 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public query<T>(typeT: new () => T, alias: string = void 0): Observable<Query<T>> {
         return Observable.create((observer: Observer<Query<T>>) => {
-            // return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
                     const that = this;
@@ -174,7 +162,6 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public ddl(): Observable<Ddl> {
         return Observable.create((observer: Observer<Ddl>) => {
-            // return new Promise((resolve, reject) => {
             this.databaseInstance()
                 .then(database => {
                     observer.next(new Ddl(database, this._mapper, this.enableLog));

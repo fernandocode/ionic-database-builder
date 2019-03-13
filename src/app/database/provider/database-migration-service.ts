@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DatabaseMigrationContract, DatabaseResettableContract, Version } from 'ionic-database-builder';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DatabaseMigrationService extends DatabaseMigrationContract {
 
     public to(

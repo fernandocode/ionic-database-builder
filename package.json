@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build ionic-database-builder",
+    "start": "ng serve --aot",
+    "build": "ng build ionic-database-builder --prod",
     "postbuild": "node scripts/copy-artifacts.js",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "publish": "npm run build && npm publish dist/ionic-database-builder"
   },
   "private": true,
   "dependencies": {
