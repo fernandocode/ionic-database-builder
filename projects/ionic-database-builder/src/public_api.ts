@@ -9,7 +9,6 @@ export * from './lib/services/database-migration-contract';
 export * from './lib/model/version-model';
 export * from './lib/services/database-resettable-contract';
 export * from './lib/services/database';
-export * from './lib/services/database-browser.service';
-export * from './lib/services/database-abstract-sqlite.service';
+export * from './lib/services/websql-database.service';
 export * from './lib/services/database-mock.service';
 export * from './lib/utils/dependency-injection-definition';

@@ -5,18 +5,18 @@ import { DatabaseCreatorContract, DatabaseConfig, DatabaseObject, DatabaseResult
 export class DatabaseMockService implements DatabaseCreatorContract {
 
   create(config: DatabaseConfig): Promise<DatabaseObject> {
-    console.log("Database Fake! \\o/");
+    console.log('Database Fake! \\o/');
     return new Promise<DatabaseObject>((resolve, reject) => {
-      resolve(<DatabaseObject>{
+      resolve({
         executeSql: (statement: string, params: any): Promise<DatabaseResult> => {
           this.executeFake(statement, params);
-          return new Promise<DatabaseResult>((resolve, reject) => {
-            resolve(this.resultFake());
+          return new Promise<DatabaseResult>((executeSqlResolve, executeSqlReject) => {
+            executeSqlResolve(this.resultFake());
           });
         },
         transaction: (fn: (transaction: DatabaseBaseTransaction) => void): Promise<any> => {
-          return new Promise<any>((resolve, reject) => {
-            fn(<DatabaseBaseTransaction>{
+          return new Promise<any>((executeSqlResolve, executeSqlReject) => {
+            fn({
               executeSql: (
                 sql: string,
                 values: any,
@@ -26,11 +26,11 @@ export class DatabaseMockService implements DatabaseCreatorContract {
                 this.executeFake(sql, values);
                 success(void 0, this.resultFake());
               },
-            })
-            resolve(void 0);
+            } as DatabaseBaseTransaction);
+            executeSqlResolve(void 0);
           });
         }
-      });
+      } as DatabaseObject);
     });
   }
 
@@ -39,16 +39,16 @@ export class DatabaseMockService implements DatabaseCreatorContract {
   }
 
   private resultFake(): DatabaseResult {
-    return <DatabaseResult>{
+    return {
       rows: {
         length: 20,
         item: (index: number) => {
           return {
-            index: index
-          }
+            index
+          };
         }
       }
-    }
+    } as DatabaseResult;
   }
 
 }

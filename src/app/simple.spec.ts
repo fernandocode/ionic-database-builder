@@ -85,9 +85,9 @@ describe('Simple Test injector component', () => {
 
   it('Test transaction mapper insert T', async () => {
     const database: Database = TestBed.get(Database);
-    let rollback = () => {
+    const rollback = () => {
       database.rollbackTransaction().toPromise().then().catch();
-    }
+    };
     const crud = await database.beginTransaction().toPromise();
     try {
       const result = crud.insert(Cliente, clienteToSave).compile();
@@ -98,8 +98,7 @@ describe('Simple Test injector component', () => {
       expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
       const commitResult = await database.commitTransaction().toPromise();
       expect(commitResult).toEqual(true);
-    }
-    catch (e) {
+    } catch (e) {
       rollback();
     }
   });

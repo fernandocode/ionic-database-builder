@@ -1,10 +1,10 @@
-import { Version } from "./../model/version-model";
-import { Injectable, Injector, Optional, Inject } from "@angular/core";
-import { Ddl, DatabaseObject, forkJoinSafe } from "database-builder";
-import { DatabaseMigrationContract } from "./database-migration-contract";
-import { DatabaseMigrationBase } from "../utils/database-migration-base";
-import { DatabaseResettableContract } from "./database-resettable-contract";
-import { DatabaseSettingsFactoryContract } from "../utils/database-settings-factory-contract";
+import { Version } from './../model/version-model';
+import { Injectable, Injector, Optional, Inject } from '@angular/core';
+import { Ddl, DatabaseObject, forkJoinSafe } from 'database-builder';
+import { DatabaseMigrationContract } from './database-migration-contract';
+import { DatabaseMigrationBase } from '../utils/database-migration-base';
+import { DatabaseResettableContract } from './database-resettable-contract';
+import { DatabaseSettingsFactoryContract } from '../utils/database-settings-factory-contract';
 import { Observable, Observer } from 'rxjs';
 import { DATABASE_MIGRATION } from '../utils/dependency-injection-definition';
 
@@ -24,7 +24,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
     public reset(database: DatabaseObject): Observable<any> {
 
         // tslint:disable-next-line:no-console
-        console.info("database reset");
+        console.info('database reset');
 
         const observablesWait: Array<Observable<any>> = [];
 

@@ -1,7 +1,7 @@
-import { GetMapper, DatabaseObject } from "database-builder";
-import { DatabaseResettableContract } from "./database-resettable-contract";
-import { Observable } from "rxjs";
-import { Version } from "../model/version-model";
+import { GetMapper, DatabaseObject } from 'database-builder';
+import { DatabaseResettableContract } from './database-resettable-contract';
+import { Observable } from 'rxjs';
+import { Version } from '../model/version-model';
 
 export abstract class DatabaseMigrationContract {
 
