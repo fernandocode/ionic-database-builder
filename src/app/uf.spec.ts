@@ -2,7 +2,7 @@ import { Uf } from './database/models/uf';
 import { TestBed, async } from '@angular/core/testing';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, DatabaseBrowserService, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, DatabaseSettingsFactoryContract } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, DatabaseSettingsFactoryContract } from 'ionic-database-builder';
 
 describe('Uf', () => {
   beforeEach(async(() => {
@@ -20,13 +20,13 @@ describe('Uf', () => {
           provide: DATABASE_CREATOR,
           useFactory: (
             mock: DatabaseMockService,
-            sqlBrowser: DatabaseBrowserService
+            sqlBrowser: WebSqlDatabaseService
           ) => {
             return isMock ? mock : sqlBrowser;
           },
-          deps: [DatabaseMockService, DatabaseBrowserService]
+          deps: [DatabaseMockService, WebSqlDatabaseService]
         },
-        DatabaseBrowserService,
+        WebSqlDatabaseService,
         DatabaseMockService
       ],
     });

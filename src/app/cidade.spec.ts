@@ -2,7 +2,7 @@ import { Cidade } from './database/models/cidade';
 import { TestBed, async } from '@angular/core/testing';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, DatabaseBrowserService, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, WebSqlDatabaseService } from 'ionic-database-builder';
 import { DatabaseMigrationService } from './database/provider/database-migration-service';
 
 describe('Cidade', () => {
@@ -13,7 +13,7 @@ describe('Cidade', () => {
       imports: [
         IonicDatabaseBuilderModule.forRoot(
           DatabaseSettingsFactory,
-          DatabaseBrowserService,
+          WebSqlDatabaseService,
           DatabaseMigrationService
         )
       ],
@@ -24,13 +24,13 @@ describe('Cidade', () => {
           provide: DATABASE_CREATOR,
           useFactory: (
             mock: DatabaseMockService,
-            sqlBrowser: DatabaseBrowserService
+            sqlBrowser: WebSqlDatabaseService
           ) => {
             return isMock ? mock : sqlBrowser;
           },
-          deps: [DatabaseMockService, DatabaseBrowserService]
+          deps: [DatabaseMockService, WebSqlDatabaseService]
         },
-        DatabaseBrowserService,
+        WebSqlDatabaseService,
         DatabaseMockService
       ],
     });
@@ -84,6 +84,7 @@ describe('Cidade', () => {
     expect(result[0].rowsAffected).toEqual(1);
 
     cidade.nome = 'Nova Cidade';
+    cidade.uf = void 0;
     const updateResult = await crud.update(Cidade, cidade)
       .where(where => where.equal(x => x.codeImport, cidade.codeImport))
       .execute().toPromise();
@@ -92,8 +93,10 @@ describe('Cidade', () => {
     const cidadesRead = await crud.query(Cidade)
       .where(where => where.equal(x => x.codeImport, cidade.codeImport))
       .toList().toPromise();
+    console.log(cidadesRead);
     expect(cidadesRead.length).toEqual(1);
     expect(cidadesRead[0].codeImport).toEqual(cidade.codeImport);
     expect(cidadesRead[0].nome).toEqual(cidade.nome);
+    expect(cidadesRead[0].uf).toEqual(null);
   });
 });

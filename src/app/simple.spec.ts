@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { DatabaseMigrationService } from './database/provider/database-migration-service';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, DatabaseBrowserService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService } from 'ionic-database-builder';
 import { Uf } from './database/models/uf';
 import { Regiao } from './database/models/regiao';
 import { SubRegiao } from './database/models/sub-regiao';
@@ -20,7 +20,7 @@ describe('Simple Test injector component', () => {
       imports: [
         IonicDatabaseBuilderModule.forRoot(
           DatabaseSettingsFactory,
-          DatabaseBrowserService,
+          WebSqlDatabaseService,
           DatabaseMigrationService,
           false,
           true,
