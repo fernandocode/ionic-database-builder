@@ -1,4 +1,4 @@
-import { ReferencesModelTest } from "./reference-model-test";
+import { ReferencesModelTest } from './reference-model-test';
 
 export class ModelTest {
     public id: number;

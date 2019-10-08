@@ -18,6 +18,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         @Optional() @Inject(DATABASE_MIGRATION) private _databaseMigrationContract: DatabaseMigrationContract
     ) {
         super();
+        // tslint:disable-next-line: deprecation
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 

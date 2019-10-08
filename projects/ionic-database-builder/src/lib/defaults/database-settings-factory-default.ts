@@ -1,6 +1,6 @@
 import { GetMapper } from 'database-builder';
-import { Injector, Injectable } from "@angular/core";
-import { DatabaseSettingsModel } from "../model/database-settings-model";
+import { Injector, Injectable } from '@angular/core';
+import { DatabaseSettingsModel } from '../model/database-settings-model';
 import { DatabaseSettingsFactoryContract } from 'ionic-database-builder';
 
 @Injectable()
@@ -17,8 +17,8 @@ export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContr
         if (Number.isInteger(versionOrModel as number)) {
             this._model = {
                 version: versionOrModel as number,
-                databaseName: databaseName,
-                mapper: mapper
+                databaseName,
+                mapper
             };
         } else {
             this._model = versionOrModel as DatabaseSettingsModel;

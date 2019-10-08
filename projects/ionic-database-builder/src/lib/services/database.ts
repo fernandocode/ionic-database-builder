@@ -23,10 +23,12 @@ export class Database extends BuildableDatabaseManager {
     ) {
         super(
             databaseFactory,
+            // tslint:disable-next-line: deprecation
             _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
             platformLoad,
             isEnableLog
         );
+        // tslint:disable-next-line: deprecation
         this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 

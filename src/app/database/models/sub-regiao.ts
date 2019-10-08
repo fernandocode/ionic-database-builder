@@ -1,9 +1,9 @@
 import { BaseImport } from './base-import';
-import { Regiao } from "./regiao";
+import { Regiao } from './regiao';
 
 export class SubRegiao extends BaseImport<number> {
 
-    public nome: string = "";
+    public nome: string = '';
     public regiao: Regiao = new Regiao();
 
     constructor() {
