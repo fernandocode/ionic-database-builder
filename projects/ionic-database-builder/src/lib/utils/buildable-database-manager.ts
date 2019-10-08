@@ -1,17 +1,19 @@
-import { DatabaseBaseTransaction, DatabaseResult } from "database-builder";
-import { DatabaseManager } from "./database-manager";
-import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from "database-builder";
-import { DatabaseFactoryContract } from "./database-factory-contract";
-import { Observable, Observer } from "rxjs";
+import { DatabaseBaseTransaction, DatabaseResult } from 'database-builder';
+import { DatabaseManager } from './database-manager';
+import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
+import { DatabaseFactoryContract } from './database-factory-contract';
+import { Observable, Observer } from 'rxjs';
+import { PlatformLoad } from './platform-load';
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
         databaseFactory: DatabaseFactoryContract,
         private _mapper: GetMapper,
+        platformLoad: PlatformLoad,
         public enableLog: boolean = true
     ) {
-        super(databaseFactory);
+        super(databaseFactory, platformLoad);
     }
 
     public get mapper(): GetMapper {
@@ -21,7 +23,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     public databaseInstance(): Promise<DatabaseObject> {
         const database = super.databaseInstance(this.databaseName(), this.version());
         if (!database) {
-            throw new Error("SQLite not avaliable!");
+            throw new Error('SQLite not avaliable!');
         }
         return database;
     }
@@ -64,7 +66,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public beginTransaction(): Observable<Crud> {
         return Observable.create((observer: Observer<Crud>) => {
-            this.sql("BEGIN TRANSACTION")
+            this.sql('BEGIN TRANSACTION')
                 .subscribe(r => {
                     this.crud()
                         .subscribe(crud => {
@@ -83,7 +85,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public commitTransaction(): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
-            this.sql("COMMIT")
+            this.sql('COMMIT')
                 .subscribe(r => {
                     observer.next(true);
                     observer.complete();
@@ -96,7 +98,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     public rollbackTransaction(): Observable<boolean> {
         return Observable.create((observer: Observer<boolean>) => {
-            this.sql("ROLLBACK")
+            this.sql('ROLLBACK')
                 .subscribe(r => {
                     observer.next(true);
                     observer.complete();
@@ -125,7 +127,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
                     const executable = new ExecutableBuilder(this.enableLog);
                     executable.execute([{
                         query: sql,
-                        params: params
+                        params
                     } as QueryCompiled], database)
                         .subscribe((cursor: DatabaseResult[]) => {
                             observer.next(cursor[0]);

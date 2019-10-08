@@ -1,5 +1,5 @@
-import { Injector } from "@angular/core";
-import { GetMapper } from "database-builder";
+import { Injector } from '@angular/core';
+import { GetMapper } from 'database-builder';
 
 export abstract class DatabaseSettingsFactoryContract {
 

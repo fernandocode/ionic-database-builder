@@ -1,5 +1,5 @@
-import { DatabaseObject } from "database-builder";
-import { Observable } from "rxjs";
+import { DatabaseObject } from 'database-builder';
+import { Observable } from 'rxjs';
 
 export abstract class DatabaseFactoryContract {
 

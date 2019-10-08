@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { TestClazzRef } from "../models/test-clazz-ref";
-import { TestClazz } from "../models/test-clazz";
-import { Cliente } from "../models/cliente";
-import { Cidade } from "../models/cidade";
-import { Uf } from "../models/uf";
-import { SubRegiao } from "../models/sub-regiao";
-import { Regiao } from "../models/regiao";
-import { Classificacao } from "../models/classificacao";
-import { MapperBase } from "database-builder";
-import { PrimaryKeyType } from "database-builder/src/core/enums/primary-key-type";
+import { Injectable } from '@angular/core';
+import { TestClazzRef } from '../models/test-clazz-ref';
+import { TestClazz } from '../models/test-clazz';
+import { Cliente } from '../models/cliente';
+import { Cidade } from '../models/cidade';
+import { Uf } from '../models/uf';
+import { SubRegiao } from '../models/sub-regiao';
+import { Regiao } from '../models/regiao';
+import { Classificacao } from '../models/classificacao';
+import { MapperBase } from 'database-builder';
+import { PrimaryKeyType } from 'database-builder/src/core/enums/primary-key-type';
 import { DatabaseHelperService } from 'ionic-database-builder';
 
 @Injectable()

@@ -1,8 +1,8 @@
 
-import * as momentNs from "moment";
+import * as momentNs from 'moment';
 const moment = momentNs;
-import { DatabaseObject } from "database-builder";
-import { Observable, Observer } from "rxjs";
+import { DatabaseObject } from 'database-builder';
+import { Observable, Observer } from 'rxjs';
 
 export abstract class DatabaseMigrationBase {
 
@@ -69,8 +69,8 @@ export abstract class DatabaseMigrationBase {
                         .catch(err => this.error(err, observer));
                 }
                 observer.next({
-                    oldVersion: oldVersion,
-                    newVersion: newVersion
+                    oldVersion,
+                    newVersion
                 });
                 observer.complete();
             });

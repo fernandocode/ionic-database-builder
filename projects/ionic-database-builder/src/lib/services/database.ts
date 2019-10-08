@@ -1,11 +1,12 @@
-import { DatabaseMigration } from "./database-migration";
-import { Inject, Injectable, Injector } from "@angular/core";
-import { BuildableDatabaseManager } from "../utils/buildable-database-manager";
-import { DatabaseFactoryContract } from "../utils/database-factory-contract";
-import { DatabaseObject } from "database-builder";
+import { DatabaseMigration } from './database-migration';
+import { Inject, Injectable, Injector } from '@angular/core';
+import { BuildableDatabaseManager } from '../utils/buildable-database-manager';
+import { DatabaseFactoryContract } from '../utils/database-factory-contract';
+import { DatabaseObject } from 'database-builder';
 import { Observable, Observer } from 'rxjs';
-import { IS_AVAILABLE_DATABASE, IS_ENABLE_LOG } from '../utils/dependency-injection-definition';
+import { IS_AVAILABLE_DATABASE, IS_ENABLE_LOG, PLATFORM_LOAD } from '../utils/dependency-injection-definition';
 import { DatabaseSettingsFactoryContract } from '../utils/database-settings-factory-contract';
+import { PlatformLoad } from '../utils/platform-load';
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
@@ -17,11 +18,13 @@ export class Database extends BuildableDatabaseManager {
         @Inject(IS_ENABLE_LOG) isEnableLog: boolean,
         private _injector: Injector,
         databaseFactory: DatabaseFactoryContract,
-        private _databaseMigration: DatabaseMigration
+        private _databaseMigration: DatabaseMigration,
+        @Inject(PLATFORM_LOAD) platformLoad: PlatformLoad
     ) {
         super(
             databaseFactory,
             _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
+            platformLoad,
             isEnableLog
         );
         this._settings = _injector.get(DatabaseSettingsFactoryContract);

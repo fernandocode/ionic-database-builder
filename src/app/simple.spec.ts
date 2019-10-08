@@ -22,6 +22,7 @@ describe('Simple Test injector component', () => {
           DatabaseSettingsFactory,
           WebSqlDatabaseService,
           DatabaseMigrationService,
+          { ready: () => Promise.resolve() },
           false,
           true,
         )
