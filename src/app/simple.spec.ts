@@ -10,6 +10,7 @@ import { Regiao } from './database/models/regiao';
 import { SubRegiao } from './database/models/sub-regiao';
 import { Classificacao } from './database/models/classificacao';
 import { Cliente } from './database/models/cliente';
+import { PlatformLoadDefault } from 'projects/ionic-database-builder/src/lib/utils/platform-load-default';
 
 describe('Simple Test injector component', () => {
   beforeEach(async(() => {
@@ -22,7 +23,7 @@ describe('Simple Test injector component', () => {
           DatabaseSettingsFactory,
           WebSqlDatabaseService,
           DatabaseMigrationService,
-          { ready: () => Promise.resolve() },
+          PlatformLoadDefault,
           false,
           true,
         )

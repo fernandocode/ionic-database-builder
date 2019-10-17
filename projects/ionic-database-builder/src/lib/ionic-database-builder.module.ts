@@ -11,6 +11,7 @@ import { DatabaseHelperService } from './services/database-helper.service';
 import { DatabaseFactoryDefault } from './defaults/database-factory-default';
 import { DatabaseFactoryContract } from './utils/database-factory-contract';
 import { PlatformLoad } from './utils/platform-load';
+import { PlatformLoadDefault } from './utils/platform-load-default';
 
 @NgModule({
   providers: [
@@ -20,6 +21,10 @@ import { PlatformLoad } from './utils/platform-load';
     {
       provide: DatabaseFactoryContract,
       useClass: DatabaseFactoryDefault
+    },
+    {
+      provide: PLATFORM_LOAD,
+      useClass: PlatformLoadDefault
     }
   ]
 })
@@ -35,14 +40,14 @@ export class IonicDatabaseBuilderModule {
   public static forSimple(
     isEnableLogProvider: boolean = false,
     isAvailableProvider: boolean = true,
-    platformLoad: PlatformLoad = { ready: () => Promise.resolve() },
+    platformLoad: Type<PlatformLoad> = PlatformLoadDefault
   ): ModuleWithProviders {
     return {
       ngModule: IonicDatabaseBuilderModule,
       providers: [
         { provide: IS_ENABLE_LOG, useValue: isEnableLogProvider },
         { provide: IS_AVAILABLE_DATABASE, useValue: isAvailableProvider },
-        { provide: PLATFORM_LOAD, useValue: platformLoad },
+        { provide: PLATFORM_LOAD, useClass: platformLoad },
       ]
     };
   }
@@ -51,7 +56,7 @@ export class IonicDatabaseBuilderModule {
     settingsProvider: Type<DatabaseSettingsFactoryContract>,
     databaseCreatorProvider: Type<DatabaseCreatorContract>,
     databaseMigrationContract: Type<DatabaseMigrationContract>,
-    platformLoad: PlatformLoad = { ready: () => Promise.resolve() },
+    platformLoad: Type<PlatformLoad> = PlatformLoadDefault,
     isEnableLogProvider: boolean = false,
     isAvailableProvider: boolean = true,
   ): ModuleWithProviders {
@@ -62,7 +67,7 @@ export class IonicDatabaseBuilderModule {
         { provide: DATABASE_CREATOR, useClass: databaseCreatorProvider },
         { provide: DATABASE_MIGRATION, useClass: databaseMigrationContract },
         { provide: IS_ENABLE_LOG, useValue: isEnableLogProvider },
-        { provide: PLATFORM_LOAD, useValue: platformLoad },
+        { provide: PLATFORM_LOAD, useClass: platformLoad },
         { provide: IS_AVAILABLE_DATABASE, useValue: isAvailableProvider },
       ]
     };
