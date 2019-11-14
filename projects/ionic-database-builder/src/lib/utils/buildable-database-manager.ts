@@ -2,8 +2,10 @@ import { DatabaseBaseTransaction, DatabaseResult } from 'database-builder';
 import { DatabaseManager } from './database-manager';
 import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
 import { DatabaseFactoryContract } from './database-factory-contract';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, from, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { PlatformLoad } from './platform-load';
+import { ManagedTransaction } from 'database-builder/src/transaction/managed-transaction';
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
@@ -51,6 +53,24 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    public managedTransaction(): Observable<ManagedTransaction> {
+        return from(this.databaseInstance()).pipe(mergeMap(database => of(database.managedTransaction())));
+        // return new Observable<ManagedTransaction>((observer) => {
+        //     const database = await this.databaseInstance();
+        //     // this.newTransaction(successTransaction)
+        //     //     .subscribe((transaction) => {
+        //     //         observer.next(new Crud(transaction, this._mapper, this.enableLog));
+        //     //         observer.complete();
+        //     //     }, error => {
+        //     //         observer.error(error);
+        //     //         observer.complete();
+        //     //     });
+        // });
+    }
+
+    /**
+     * @deprecated Use managedTransaction()
+     */
     public transaction(successTransaction: () => void): Observable<Crud> {
         return new Observable((observer: Observer<Crud>) => {
             this.newTransaction(successTransaction)
@@ -64,6 +84,9 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    /**
+     * @deprecated Use managedTransaction()
+     */
     public beginTransaction(): Observable<Crud> {
         return new Observable((observer: Observer<Crud>) => {
             this.sql('BEGIN TRANSACTION')
@@ -83,6 +106,9 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    /**
+     * @deprecated Use managedTransaction()
+     */
     public commitTransaction(): Observable<boolean> {
         return new Observable((observer: Observer<boolean>) => {
             this.sql('COMMIT')
@@ -96,6 +122,9 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    /**
+     * @deprecated Use managedTransaction()
+     */
     public rollbackTransaction(): Observable<boolean> {
         return new Observable((observer: Observer<boolean>) => {
             this.sql('ROLLBACK')
@@ -120,27 +149,27 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
-    public batch(compiled: QueryCompiled[]): Observable<DatabaseResult[]> {
-        return new Observable((observer: Observer<DatabaseResult[]>) => {
-            this.databaseInstance()
-                .then(database => {
-                    const executable = new ExecutableBuilder(this.enableLog);
-                    console.log('batch ::: ', database);
-                    executable.executeBatch(compiled, database)
-                        .subscribe((cursor: DatabaseResult[]) => {
-                            observer.next(cursor);
-                            observer.complete();
-                        }, err => {
-                            observer.error(err);
-                            observer.complete();
-                        });
-                })
-                .catch(err => {
-                    observer.error(err);
-                    observer.complete();
-                });
-        });
-    }
+    // public batch(compiled: QueryCompiled[]): Observable<DatabaseResult[]> {
+    //     return new Observable((observer: Observer<DatabaseResult[]>) => {
+    //         this.databaseInstance()
+    //             .then(database => {
+    //                 const executable = new ExecutableBuilder(this.enableLog);
+    //                 console.log('batch ::: ', database);
+    //                 executable.executeBatch(compiled, database)
+    //                     .subscribe((cursor: DatabaseResult[]) => {
+    //                         observer.next(cursor);
+    //                         observer.complete();
+    //                     }, err => {
+    //                         observer.error(err);
+    //                         observer.complete();
+    //                     });
+    //             })
+    //             .catch(err => {
+    //                 observer.error(err);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
     public sql(sql: string, params: any[] = []): Observable<DatabaseResult> {
         return new Observable((observer: Observer<DatabaseResult>) => {
