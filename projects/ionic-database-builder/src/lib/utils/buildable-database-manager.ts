@@ -29,7 +29,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public newTransaction(successTransaction: () => void): Observable<DatabaseBaseTransaction> {
-        return Observable.create((observer: Observer<DatabaseBaseTransaction>) => {
+        return new Observable((observer: Observer<DatabaseBaseTransaction>) => {
             this.databaseInstance()
                 .then(database => {
                     database.transaction((result: DatabaseBaseTransaction) => {
@@ -52,7 +52,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public transaction(successTransaction: () => void): Observable<Crud> {
-        return Observable.create((observer: Observer<Crud>) => {
+        return new Observable((observer: Observer<Crud>) => {
             this.newTransaction(successTransaction)
                 .subscribe((transaction) => {
                     observer.next(new Crud(transaction, this._mapper, this.enableLog));
@@ -65,7 +65,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public beginTransaction(): Observable<Crud> {
-        return Observable.create((observer: Observer<Crud>) => {
+        return new Observable((observer: Observer<Crud>) => {
             this.sql('BEGIN TRANSACTION')
                 .subscribe(r => {
                     this.crud()
@@ -84,7 +84,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public commitTransaction(): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             this.sql('COMMIT')
                 .subscribe(r => {
                     observer.next(true);
@@ -97,7 +97,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public rollbackTransaction(): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             this.sql('ROLLBACK')
                 .subscribe(r => {
                     observer.next(true);
@@ -110,7 +110,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public crud(): Observable<Crud> {
-        return Observable.create((observer: Observer<Crud>) => {
+        return new Observable((observer: Observer<Crud>) => {
             this.databaseInstance()
                 .then(database => {
                     observer.next(new Crud(database, this._mapper, this.enableLog));
@@ -120,8 +120,30 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
+    public batch(compiled: QueryCompiled[]): Observable<DatabaseResult[]> {
+        return new Observable((observer: Observer<DatabaseResult[]>) => {
+            this.databaseInstance()
+                .then(database => {
+                    const executable = new ExecutableBuilder(this.enableLog);
+                    console.log('batch ::: ', database);
+                    executable.executeBatch(compiled, database)
+                        .subscribe((cursor: DatabaseResult[]) => {
+                            observer.next(cursor);
+                            observer.complete();
+                        }, err => {
+                            observer.error(err);
+                            observer.complete();
+                        });
+                })
+                .catch(err => {
+                    observer.error(err);
+                    observer.complete();
+                });
+        });
+    }
+
     public sql(sql: string, params: any[] = []): Observable<DatabaseResult> {
-        return Observable.create((observer: Observer<DatabaseResult>) => {
+        return new Observable((observer: Observer<DatabaseResult>) => {
             this.databaseInstance()
                 .then(database => {
                     const executable = new ExecutableBuilder(this.enableLog);
@@ -145,7 +167,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public query<T>(typeT: new () => T, alias: string = void 0): Observable<Query<T>> {
-        return Observable.create((observer: Observer<Query<T>>) => {
+        return new Observable((observer: Observer<Query<T>>) => {
             this.databaseInstance()
                 .then(database => {
                     const that = this;
@@ -163,7 +185,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
     }
 
     public ddl(): Observable<Ddl> {
-        return Observable.create((observer: Observer<Ddl>) => {
+        return new Observable((observer: Observer<Ddl>) => {
             this.databaseInstance()
                 .then(database => {
                     observer.next(new Ddl(database, this._mapper, this.enableLog));

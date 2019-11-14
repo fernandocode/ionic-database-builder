@@ -44,7 +44,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
     }
 
     protected migrationExecute(database: DatabaseObject, version: Version): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
 
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
@@ -75,7 +75,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
     }
 
     private callNested(observablesNested: Array<Observable<any>>, nextIndex: number): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             if (observablesNested.length > nextIndex) {
                 observablesNested[nextIndex].subscribe((result: any) => {
                     this.callNested(observablesNested, ++nextIndex).subscribe((_: any) => {

@@ -36,7 +36,7 @@ export class Database extends BuildableDatabaseManager {
         if (this._isAvailable) {
             return this._databaseMigration.version(database, version);
         }
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             observer.next(true);
             observer.complete();
         });

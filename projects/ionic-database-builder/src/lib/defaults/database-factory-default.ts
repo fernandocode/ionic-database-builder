@@ -15,7 +15,7 @@ export class DatabaseFactoryDefault extends DatabaseFactoryContract {
     }
 
     public database(databaseName: string): Observable<DatabaseObject> {
-        return Observable.create((observer: Observer<DatabaseObject>) => {
+        return new Observable((observer: Observer<DatabaseObject>) => {
             if (this._isAvailable) {
                 this._databaseCreator.create({
                     name: databaseName,

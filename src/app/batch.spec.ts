@@ -9,7 +9,7 @@
 // import { SubRegiao } from './database/models/sub-regiao';
 // import { Classificacao } from './database/models/classificacao';
 // import { Cliente } from './database/models/cliente';
-// import { IonicDatabaseBuilderModule, WebSqlDatabaseService, Database } from 'projects/ionic-database-builder/src/public_api';
+// import { IonicDatabaseBuilderModule, WebSqlDatabaseService, Database, PlatformLoadDefault, DatabaseHelperService } from 'projects/ionic-database-builder/src/public_api';
 
 // describe('Batch Test', () => {
 //   beforeEach(async(() => {
@@ -22,7 +22,7 @@
 //           DatabaseSettingsFactory,
 //           WebSqlDatabaseService,
 //           DatabaseMigrationService,
-//           { ready: () => Promise.resolve() },
+//           PlatformLoadDefault,
 //           false,
 //           true,
 //         )
@@ -62,6 +62,9 @@
 
 //   it('batch simple', async () => {
 //     const database: Database = TestBed.get(Database);
+
+//     console.log('database ::: ', database);
+
 //     const crud = await database.crud().toPromise();
 
 //     const clienteDelete = crud.delete(Cliente).compile();
@@ -75,35 +78,35 @@
 //     expect(clienteInsert[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
 
 //     const r = await database.batch([clienteDelete[0], clienteInsert[0]]).toPromise();
-//     console.log("result", r);
+//     console.log('result', r);
 
-//     // const insertResult = await insert.execute().toPromise();
-//     // expect(insertResult[0].insertId).toBeGreaterThan(0);
+//     const insertResult = await insert.execute().toPromise();
+//     expect(insertResult[0].insertId).toBeGreaterThan(0);
 
-//     // const queryResultNull = await crud.query(Cliente)
-//     //   .where(where => where.isNull(x => x.razaoSocial))
-//     //   .toList().toPromise();
+//     const queryResultNull = await crud.query(Cliente)
+//       .where(where => where.isNull(x => x.razaoSocial))
+//       .toList().toPromise();
 
-//     // expect(queryResultNull.length).toEqual(1);
+//     expect(queryResultNull.length).toEqual(1);
 //   });
 
-//   // it('Test transaction mapper insert T', async () => {
-//   //   const database: Database = TestBed.get(Database);
-//   //   const rollback = () => {
-//   //     database.rollbackTransaction().toPromise().then().catch();
-//   //   };
-//   //   const crud = await database.beginTransaction().toPromise();
-//   //   try {
-//   //     const result = crud.insert(Cliente, clienteToSave).compile();
-//   //     expect(result[0].params.toString()).toEqual([
-//   //       clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
-//   //       clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
-//   //     ].toString());
-//   //     expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-//   //     const commitResult = await database.commitTransaction().toPromise();
-//   //     expect(commitResult).toEqual(true);
-//   //   } catch (e) {
-//   //     rollback();
-//   //   }
-//   // });
+// //   it('Test transaction mapper insert T', async () => {
+// //     const database: Database = TestBed.get(Database);
+// //     const rollback = () => {
+// //       database.rollbackTransaction().toPromise().then().catch();
+// //     };
+// //     const crud = await database.beginTransaction().toPromise();
+// //     try {
+// //       const result = crud.insert(Cliente, clienteToSave).compile();
+// //       expect(result[0].params.toString()).toEqual([
+// //         clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+// //         clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
+// //       ].toString());
+// //       expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
+// //       const commitResult = await database.commitTransaction().toPromise();
+// //       expect(commitResult).toEqual(true);
+// //     } catch (e) {
+// //       rollback();
+// //     }
+// //   });
 // });

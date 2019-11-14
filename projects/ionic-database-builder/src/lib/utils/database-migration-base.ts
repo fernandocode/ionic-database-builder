@@ -7,7 +7,7 @@ import { Observable, Observer } from 'rxjs';
 export abstract class DatabaseMigrationBase {
 
     public version(database: DatabaseObject, version: number): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             this.checkTableVersion(database)
                 .subscribe(_ => {
                     this.checkVersion(database, version)
@@ -34,7 +34,7 @@ export abstract class DatabaseMigrationBase {
     ): Observable<boolean>;
 
     private checkTableVersion(database: DatabaseObject): Observable<any> {
-        return Observable.create((observer: Observer<any>) => {
+        return new Observable((observer: Observer<any>) => {
             // return new Promise<any>((resolve, reject) => {
             const scriptTableVersion = `CREATE TABLE IF NOT EXISTS MigrationVersion(
                     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
@@ -50,7 +50,7 @@ export abstract class DatabaseMigrationBase {
     }
 
     private checkVersion(database: DatabaseObject, newVersion: number): Observable<{ oldVersion: number, newVersion: number }> {
-        return Observable.create((observer: Observer<any>) => {
+        return new Observable((observer: Observer<any>) => {
             this.getVersion(database).subscribe((oldVersion: number) => {
                 if (oldVersion > 0) {
                     if (newVersion > oldVersion) {
@@ -78,7 +78,7 @@ export abstract class DatabaseMigrationBase {
     }
 
     private getVersion(database: DatabaseObject): Observable<number> {
-        return Observable.create((observer: Observer<number>) => {
+        return new Observable((observer: Observer<number>) => {
             database.executeSql(`SELECT * FROM MigrationVersion`, {})
                 .then((result) => {
                     let version = 0;
@@ -93,7 +93,7 @@ export abstract class DatabaseMigrationBase {
     }
 
     private migration(database: DatabaseObject, control: { oldVersion: number, newVersion: number }): Observable<boolean> {
-        return Observable.create((observer: Observer<boolean>) => {
+        return new Observable((observer: Observer<boolean>) => {
             this.migrationExecute(database, control)
                 .subscribe(result => {
                     observer.next(result);

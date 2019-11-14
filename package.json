@@ -6,10 +6,11 @@
     "start": "ng serve --aot",
     "build": "ng build ionic-database-builder --prod",
     "postbuild": "node scripts/copy-artifacts.js",
-    "test": "ng test --prod",
+    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "publish": "npm run build && npm publish dist/ionic-database-builder"
+    "publish-npm": "npm run build && npm publish dist/ionic-database-builder",
+    "publish-npm-alpha": "npm run build && npm publish dist/ionic-database-builder --tag alpha"
   },
   "private": true,
   "dependencies": {
@@ -22,8 +23,9 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "core-js": "^2.5.4",
-    "database-builder": "^0.3.10",
-    "rxjs": "~6.3.3",
+    "database-builder": "^0.4.8",
+    "moment": "^2.22.0",
+    "rxjs": "6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
