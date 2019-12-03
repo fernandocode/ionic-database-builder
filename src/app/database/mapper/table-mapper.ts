@@ -10,6 +10,7 @@ import { Classificacao } from '../models/classificacao';
 import { MapperBase } from 'database-builder';
 import { PrimaryKeyType } from 'database-builder/src/core/enums/primary-key-type';
 import { DatabaseHelperService } from 'ionic-database-builder';
+import { GuidClazz } from '../models/guid-clazz';
 
 @Injectable()
 export class TableMapper extends MapperBase {
@@ -24,6 +25,9 @@ export class TableMapper extends MapperBase {
             }
         );
 
+        this.mapper(GuidClazz)
+            .key(x => x.guid, PrimaryKeyType.Guid, String)
+            .column(x => x.description, String);
         this.autoMapper(TestClazzRef, x => x.id, PrimaryKeyType.AutoIncrement);
         this.autoMapper(TestClazz, x => x.id, PrimaryKeyType.AutoIncrement);
         this.autoMapper(Regiao, x => x.codeImport, PrimaryKeyType.AutoIncrement);
