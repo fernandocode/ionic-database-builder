@@ -45,7 +45,7 @@ describe('Cidade', () => {
 
     const cidade: Cidade = new Cidade();
     cidade.nome = 'Cidade Test';
-    const insertResult = await crud.insert(Cidade, cidade).execute().toPromise();
+    const insertResult = await crud.insert(Cidade, { modelToSave: cidade }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
   });
@@ -59,12 +59,12 @@ describe('Cidade', () => {
 
     const cidade: Cidade = new Cidade();
     cidade.nome = 'Cidade Test';
-    const insertResult = await crud.insert(Cidade, cidade).execute().toPromise();
+    const insertResult = await crud.insert(Cidade, { modelToSave: cidade }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
 
     cidade.nome = 'Nova Cidade';
-    const updateResult = await crud.update(Cidade, cidade)
+    const updateResult = await crud.update(Cidade, { modelToSave: cidade })
       .where(where => where.equal(x => x.codeImport, cidade.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);
@@ -79,13 +79,13 @@ describe('Cidade', () => {
 
     const cidade: Cidade = new Cidade();
     cidade.nome = 'Cidade Test';
-    const result = await crud.insert(Cidade, cidade).execute().toPromise();
+    const result = await crud.insert(Cidade, { modelToSave: cidade }).execute().toPromise();
     expect(result[0].insertId).toBeGreaterThan(0);
     expect(result[0].rowsAffected).toEqual(1);
 
     cidade.nome = 'Nova Cidade';
     cidade.uf = void 0;
-    const updateResult = await crud.update(Cidade, cidade)
+    const updateResult = await crud.update(Cidade, { modelToSave: cidade })
       .where(where => where.equal(x => x.codeImport, cidade.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);

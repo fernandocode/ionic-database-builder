@@ -58,7 +58,7 @@ describe('ManagedTransaction', () => {
 
         const cidade: Cidade = new Cidade();
         cidade.nome = 'Cidade Test';
-        const insertResult = await crud.insert(Cidade, cidade).execute().toPromise();
+        const insertResult = await crud.insert(Cidade, { modelToSave: cidade }).execute().toPromise();
         expect(insertResult[0].insertId).toBeGreaterThan(0);
         expect(insertResult[0].rowsAffected).toEqual(1);
     });
@@ -72,7 +72,7 @@ describe('ManagedTransaction', () => {
 
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
-            crud.insert(GuidClazz, obj1)
+            crud.insert(GuidClazz, { modelToSave: obj1 })
         );
 
         const modelUpdate = {
@@ -81,19 +81,19 @@ describe('ManagedTransaction', () => {
         } as GuidClazz;
         transaction.add(
             crud
-                .update(GuidClazz, modelUpdate)
+                .update(GuidClazz, { modelToSave: modelUpdate })
                 .where(where => where.equal(x => x.guid, obj1.guid))
         );
 
         const modelUpdateByDescription = new GuidClazz(void 0, 'Teste teste test');
         transaction.add(
             crud
-                .update(GuidClazz, modelUpdateByDescription)
+                .update(GuidClazz, { modelToSave: modelUpdateByDescription })
                 .where(where => where.equal(x => x.description, modelUpdate.description))
         );
 
         try {
-            const resultTransaction = await transaction.commit();
+            const resultTransaction = await transaction.commit().toPromise();
             expect(resultTransaction).toEqual(true);
         } catch (error) {
             console.error(error);
@@ -115,10 +115,10 @@ describe('ManagedTransaction', () => {
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
             crud
-                .insert(GuidClazz, obj1)
+                .insert(GuidClazz, { modelToSave: obj1 })
         );
 
-        const resultTransaction = await transaction.commit();
+        const resultTransaction = await transaction.commit().toPromise();
         expect(resultTransaction).toEqual(true);
 
         const queryUpdateResult = await crud.query(GuidClazz).toList().toPromise();
@@ -141,15 +141,15 @@ describe('ManagedTransaction', () => {
         expect(obj1.guid).toBeUndefined();
 
         transaction.add(
-            crud.insert(GuidClazz, obj1)
+            crud.insert(GuidClazz, { modelToSave: obj1 })
         );
 
         expect(obj1.guid.length).toEqual(36);
 
-        const resultTransaction = await transaction.commit();
+        const resultTransaction = await transaction.commit().toPromise();
         expect(resultTransaction).toEqual(true);
 
-        const queryUpdateResult = await crud.query(GuidClazz).firstOrDefault(where => where.equal(x => x.guid, obj1.guid)).toPromise();
+        const queryUpdateResult = await crud.query(GuidClazz).firstOrDefault({ where: where => where.equal(x => x.guid, obj1.guid) }).toPromise();
         expect(queryUpdateResult.description).toEqual(obj1.description);
         expect(queryUpdateResult.guid).toEqual(obj1.guid);
     });
@@ -165,12 +165,12 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, obj1)
+                .insert(GuidClazz, { modelToSave: obj1 })
         );
         // script with error, table not exist
         transaction.add(
             crud
-                .update(GuidClazz, guidClazz)
+                .update(GuidClazz, { modelToSave: guidClazz })
                 .columns(columns => columns.setValue('abc', 1))
         );
 
@@ -178,15 +178,15 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, obj2)
+                .insert(GuidClazz, { modelToSave: obj2 })
         );
         try {
-            await transaction.commit();
+            await transaction.commit().toPromise();
         } catch (error) {
             expect(error.SYNTAX_ERR).toEqual(error.code);
             expect(obj1.guid.length).toEqual(36);
 
-            const queryUpdateResult = await crud.query(GuidClazz).firstOrDefault(where => where.equal(x => x.guid, obj1.guid)).toPromise();
+            const queryUpdateResult = await crud.query(GuidClazz).firstOrDefault({ where: where => where.equal(x => x.guid, obj1.guid) }).toPromise();
             expect(queryUpdateResult).toBeUndefined();
 
             const resultRollback = await transaction.rollback();
@@ -207,19 +207,19 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, obj1)
+                .insert(GuidClazz, { modelToSave: obj1 })
         );
 
         const obj2 = Object.assign({}, guidClazz);
 
         transaction.add(
             crud
-                .insert(GuidClazz, obj2)
+                .insert(GuidClazz, { modelToSave: obj2 })
         );
         const resultRollback = await transaction.rollback();
         expect(resultRollback).toEqual(true);
 
-        const queryUpdateResult2 = await crud.query(GuidClazz).firstOrDefault(where => where.equal(x => x.guid, obj1.guid)).toPromise();
+        const queryUpdateResult2 = await crud.query(GuidClazz).firstOrDefault({ where: where => where.equal(x => x.guid, obj1.guid) }).toPromise();
 
         expect(queryUpdateResult2).toBeUndefined();
     });
@@ -240,7 +240,7 @@ describe('ManagedTransaction', () => {
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
             crud
-                .insert(GuidClazz, obj1)
+                .insert(GuidClazz, { modelToSave: obj1 })
         );
         transaction.add(
             crud
@@ -253,18 +253,18 @@ describe('ManagedTransaction', () => {
         } as GuidClazz;
         transaction.add(
             crud
-                .update(GuidClazz, modelUpdate)
+                .update(GuidClazz, { modelToSave: modelUpdate })
                 .where(where => where.equal(x => x.guid, obj1.guid))
         );
 
         const modelUpdateByDescription = new GuidClazz(void 0, 'Teste teste test');
         transaction.add(
             crud
-                .update(GuidClazz, modelUpdateByDescription)
+                .update(GuidClazz, { modelToSave: modelUpdateByDescription })
                 .where(where => where.equal(x => x.description, modelUpdate.description))
         );
 
-        const resultTransaction = await transaction.commit();
+        const resultTransaction = await transaction.commit().toPromise();
         expect(resultTransaction).toEqual(true);
     });
 

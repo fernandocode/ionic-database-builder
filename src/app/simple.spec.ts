@@ -67,7 +67,7 @@ describe('Simple Test injector component', () => {
 
     await crud.delete(Cliente).execute().toPromise();
 
-    const insert = crud.insert(Cliente, clienteToSave);
+    const insert = crud.insert(Cliente, { modelToSave: clienteToSave });
     const result = insert.compile();
     expect(result[0].params.toString()).toEqual([
       clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
@@ -92,7 +92,7 @@ describe('Simple Test injector component', () => {
     };
     const crud = await database.beginTransaction().toPromise();
     try {
-      const result = crud.insert(Cliente, clienteToSave).compile();
+      const result = crud.insert(Cliente, { modelToSave: clienteToSave }).compile();
       expect(result[0].params.toString()).toEqual([
         clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
         clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport

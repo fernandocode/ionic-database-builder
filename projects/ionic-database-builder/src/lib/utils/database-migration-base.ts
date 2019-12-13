@@ -1,4 +1,3 @@
-
 import * as momentNs from 'moment';
 const moment = momentNs;
 import { DatabaseObject } from 'database-builder';

@@ -41,7 +41,7 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const insertResult = await crud.insert(Uf, uf).execute().toPromise();
+    const insertResult = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
   });
@@ -55,12 +55,12 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const insertResult = await crud.insert(Uf, uf).execute().toPromise();
+    const insertResult = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
 
     uf.nome = 'Nova Uf';
-    const updateResult = await crud.update(Uf, uf)
+    const updateResult = await crud.update(Uf, { modelToSave: uf })
       .where(where => where.equal(x => x.codeImport, uf.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);
@@ -75,12 +75,12 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const result = await crud.insert(Uf, uf).execute().toPromise();
+    const result = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
     expect(result[0].insertId).toBeGreaterThan(0);
     expect(result[0].rowsAffected).toEqual(1);
 
     uf.nome = 'Nova Uf';
-    const updateResult = await crud.update(Uf, uf)
+    const updateResult = await crud.update(Uf, { modelToSave: uf })
       .where(where => where.equal(x => x.codeImport, uf.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);
