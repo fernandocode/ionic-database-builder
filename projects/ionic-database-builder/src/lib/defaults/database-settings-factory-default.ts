@@ -1,7 +1,7 @@
 import { GetMapper } from 'database-builder';
 import { Injector, Injectable } from '@angular/core';
 import { DatabaseSettingsModel } from '../model/database-settings-model';
-import { DatabaseSettingsFactoryContract } from 'ionic-database-builder';
+import { DatabaseSettingsFactoryContract } from '../utils';
 
 @Injectable()
 export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContract {
