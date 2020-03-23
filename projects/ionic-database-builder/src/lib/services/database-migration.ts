@@ -32,7 +32,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
         const mappers = this._settings.mapper(this._injector);
 
         // remove dados offline da versão anterior, pois o formato dos dados foi alterado de uma versão para a outra
-        const ddl = new Ddl(database, mappers, true);
+        const ddl = new Ddl({ database, getMapper: mappers, enableLog: true });
         mappers.forEachMapper((value, key) => {
             if (!value.readOnly) {
                 observablesWait.push(ddl.drop(value.newable).execute());

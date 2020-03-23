@@ -1,4 +1,4 @@
-import { DatabaseBaseTransaction, DatabaseResult } from 'database-builder';
+import { DatabaseBaseTransaction, DatabaseResult, DatabaseBuilderError } from 'database-builder';
 import { DatabaseManager } from './database-manager';
 import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
 import { DatabaseFactoryContract } from './database-factory-contract';
@@ -30,6 +30,18 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return database;
     }
 
+    public managedTransaction(): Observable<ManagedTransaction> {
+        return from(this.databaseInstance()).pipe(mergeMap(database => {
+            if (!database.managedTransaction) {
+                throw new DatabaseBuilderError('Managed Transaction not supported in current middleware!');
+            }
+            return of(database.managedTransaction());
+        }));
+    }
+
+    /**
+     * @deprecated Use managedTransaction()
+     */
     public newTransaction(successTransaction: () => void): Observable<DatabaseBaseTransaction> {
         return new Observable((observer: Observer<DatabaseBaseTransaction>) => {
             this.databaseInstance()
@@ -53,21 +65,6 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         });
     }
 
-    public managedTransaction(): Observable<ManagedTransaction> {
-        return from(this.databaseInstance()).pipe(mergeMap(database => of(database.managedTransaction())));
-        // return new Observable<ManagedTransaction>((observer) => {
-        //     const database = await this.databaseInstance();
-        //     // this.newTransaction(successTransaction)
-        //     //     .subscribe((transaction) => {
-        //     //         observer.next(new Crud(transaction, this._mapper, this.enableLog));
-        //     //         observer.complete();
-        //     //     }, error => {
-        //     //         observer.error(error);
-        //     //         observer.complete();
-        //     //     });
-        // });
-    }
-
     /**
      * @deprecated Use managedTransaction()
      */
@@ -75,7 +72,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Observable((observer: Observer<Crud>) => {
             this.newTransaction(successTransaction)
                 .subscribe((transaction) => {
-                    observer.next(new Crud(transaction, this._mapper, this.enableLog));
+                    observer.next(new Crud({ database: transaction, getMapper: this._mapper, enableLog: this.enableLog }));
                     observer.complete();
                 }, error => {
                     observer.error(error);
@@ -142,34 +139,12 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Observable((observer: Observer<Crud>) => {
             this.databaseInstance()
                 .then(database => {
-                    observer.next(new Crud(database, this._mapper, this.enableLog));
+                    observer.next(new Crud({ database, getMapper: this._mapper, enableLog: this.enableLog }));
                     observer.complete();
                 })
                 .catch(error => { observer.error(error); observer.complete(); });
         });
     }
-
-    // public batch(compiled: QueryCompiled[]): Observable<DatabaseResult[]> {
-    //     return new Observable((observer: Observer<DatabaseResult[]>) => {
-    //         this.databaseInstance()
-    //             .then(database => {
-    //                 const executable = new ExecutableBuilder(this.enableLog);
-    //                 console.log('batch ::: ', database);
-    //                 executable.executeBatch(compiled, database)
-    //                     .subscribe((cursor: DatabaseResult[]) => {
-    //                         observer.next(cursor);
-    //                         observer.complete();
-    //                     }, err => {
-    //                         observer.error(err);
-    //                         observer.complete();
-    //                     });
-    //             })
-    //             .catch(err => {
-    //                 observer.error(err);
-    //                 observer.complete();
-    //             });
-    //     });
-    // }
 
     public sql(sql: string, params: any[] = []): Observable<DatabaseResult> {
         return new Observable((observer: Observer<DatabaseResult>) => {
@@ -200,10 +175,15 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
             this.databaseInstance()
                 .then(database => {
                     const that = this;
-                    observer.next(new Query(typeT, alias,
-                        (tKey: (new () => any) | string) => {
+                    observer.next(new Query(typeT, {
+                        alias,
+                        getMapper: (tKey: (new () => any) | string) => {
                             return that._mapper.get(tKey);
-                        }, this._mapper.get(typeT).mapperTable, database, this.enableLog));
+                        },
+                        mapperTable: this._mapper.get(typeT).mapperTable,
+                        database,
+                        enableLog: this.enableLog
+                    }));
                     observer.complete();
                 })
                 .catch(error => {
@@ -217,7 +197,7 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         return new Observable((observer: Observer<Ddl>) => {
             this.databaseInstance()
                 .then(database => {
-                    observer.next(new Ddl(database, this._mapper, this.enableLog));
+                    observer.next(new Ddl({ database, getMapper: this._mapper, enableLog: this.enableLog }));
                     observer.complete();
                 })
                 .catch(error => {
