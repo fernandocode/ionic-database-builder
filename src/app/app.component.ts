@@ -1,10 +1,4 @@
 import { Component } from '@angular/core';
-import { Uf } from './database/models/uf';
-import { Regiao } from './database/models/regiao';
-import { SubRegiao } from './database/models/sub-regiao';
-import { Cidade } from './database/models/cidade';
-import { Classificacao } from './database/models/classificacao';
-import { Cliente } from './database/models/cliente';
 import { Database } from 'ionic-database-builder';
 
 @Component({

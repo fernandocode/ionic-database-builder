@@ -15,7 +15,9 @@ export class DatabaseMigrationService extends DatabaseMigrationContract {
         const observablesNested: Observable<any>[] = [];
 
         if (!(window as any)._resetCalled) {
-            resettable.reset(database);
+            // resettable.reset(database).subscribe(sub => {}, err => console.error(err));
+            observablesNested.push(resettable.reset(database));
+            console.log('start resetable');
             (window as any)._resetCalled = true;
         }
 

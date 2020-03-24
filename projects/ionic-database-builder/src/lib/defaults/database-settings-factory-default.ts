@@ -3,7 +3,6 @@ import { Injector, Injectable } from '@angular/core';
 import { DatabaseSettingsModel } from '../model/database-settings-model';
 import { DatabaseSettingsFactoryContract } from '../utils';
 
-@Injectable()
 export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContract {
 
     private _model: DatabaseSettingsModel;

@@ -48,6 +48,7 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
 
             let observablesNested: Array<Observable<any>> = [];
             if (this._databaseMigrationContract) {
+                this._databaseMigrationContract.onStart();
                 const toObservables = this._databaseMigrationContract.to(
                     version,
                     database,
@@ -63,6 +64,9 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
                 observablesNested.push(this.reset(database));
             }
 
+            if (observablesNested.length > 0) {
+                this._databaseMigrationContract.onProgress();
+            }
             this.callNested(observablesNested, 0)
                 .subscribe((result: boolean) => {
                     observer.next(result);
@@ -70,6 +74,8 @@ export class DatabaseMigration extends DatabaseMigrationBase implements Database
                 }, (error: any) => {
                     observer.error(error);
                     observer.complete();
+                }, () => {
+                    this._databaseMigrationContract.onFinish();
                 });
         });
     }

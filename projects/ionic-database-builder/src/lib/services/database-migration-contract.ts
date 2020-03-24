@@ -5,6 +5,15 @@ import { Version } from '../model/version-model';
 
 export abstract class DatabaseMigrationContract {
 
+    public onStart() {
+    }
+
+    public onFinish() {
+    }
+
+    public onProgress() {
+    }
+
     public abstract to(
         version: Version,
         database: DatabaseObject,
