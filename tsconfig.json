@@ -20,10 +20,10 @@
     ],
     "paths": {
       "ionic-database-builder": [
-        "dist/ionic-database-builder"
+        "dist/ionic-database-builder/src/lib"
       ],
       "ionic-database-builder/*": [
-        "dist/ionic-database-builder/*"
+        "dist/ionic-database-builder/src/lib/*"
       ]
     }
   }
