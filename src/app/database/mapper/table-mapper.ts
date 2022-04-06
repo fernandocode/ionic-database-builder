@@ -9,7 +9,7 @@ import { Regiao } from '../models/regiao';
 import { Classificacao } from '../models/classificacao';
 import { MapperBase } from 'database-builder';
 import { PrimaryKeyType } from 'database-builder/src/core/enums/primary-key-type';
-import { DatabaseHelperService } from 'ionic-database-builder';
+import { DatabaseHelperService } from 'projects/ionic-database-builder/src/lib';
 import { GuidClazz } from '../models/guid-clazz';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, WebSqlDatabaseService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, WebSqlDatabaseService } from 'projects/ionic-database-builder/src/lib';
 import { DatabaseMigrationService } from './database/provider/database-migration-service';
 import { GuidClazz } from './database/models/guid-clazz';
 import { guidClazz } from './database/data-to-test';
@@ -40,13 +40,13 @@ describe('ManagedTransaction', () => {
         });
     }));
 
-    afterEach(async(async () => {
+    afterEach(async () => {
         const database: Database = TestBed.get(Database);
         expect(database).toBeTruthy();
 
         const crud = await database.crud().toPromise();
         await crud.delete(GuidClazz).execute().toPromise();
-    }));
+    });
 
     it('Transaction Test', async () => {
         const database: Database = TestBed.get(Database);
@@ -58,7 +58,7 @@ describe('ManagedTransaction', () => {
 
         const cidade: Cidade = new Cidade();
         cidade.nome = 'Cidade Test';
-        const insertResult = await crud.insert(Cidade, { modelToSave: cidade }).execute().toPromise();
+        const insertResult = await crud.insert(Cidade, { toSave: cidade }).execute().toPromise();
         expect(insertResult[0].insertId).toBeGreaterThan(0);
         expect(insertResult[0].rowsAffected).toEqual(1);
     });
@@ -72,7 +72,7 @@ describe('ManagedTransaction', () => {
 
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
-            crud.insert(GuidClazz, { modelToSave: obj1 })
+            crud.insert(GuidClazz, { toSave: obj1 })
         );
 
         const modelUpdate = {
@@ -81,14 +81,14 @@ describe('ManagedTransaction', () => {
         } as GuidClazz;
         transaction.add(
             crud
-                .update(GuidClazz, { modelToSave: modelUpdate })
+                .update(GuidClazz, { toSave: modelUpdate })
                 .where(where => where.equal(x => x.guid, obj1.guid))
         );
 
         const modelUpdateByDescription = new GuidClazz(void 0, 'Teste teste test');
         transaction.add(
             crud
-                .update(GuidClazz, { modelToSave: modelUpdateByDescription })
+                .update(GuidClazz, { toSave: modelUpdateByDescription })
                 .where(where => where.equal(x => x.description, modelUpdate.description))
         );
 
@@ -115,7 +115,7 @@ describe('ManagedTransaction', () => {
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj1 })
+                .insert(GuidClazz, { toSave: obj1 })
         );
 
         const resultTransaction = await transaction.commit().toPromise();
@@ -141,7 +141,7 @@ describe('ManagedTransaction', () => {
         expect(obj1.guid).toBeUndefined();
 
         transaction.add(
-            crud.insert(GuidClazz, { modelToSave: obj1 })
+            crud.insert(GuidClazz, { toSave: obj1 })
         );
 
         expect(obj1.guid.length).toEqual(36);
@@ -165,12 +165,12 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj1 })
+                .insert(GuidClazz, { toSave: obj1 })
         );
         // script with error, table not exist
         transaction.add(
             crud
-                .update(GuidClazz, { modelToSave: guidClazz })
+                .update(GuidClazz, { toSave: guidClazz })
                 .columns(columns => columns.setValue('abc', 1))
         );
 
@@ -178,7 +178,7 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj2 })
+                .insert(GuidClazz, { toSave: obj2 })
         );
         try {
             await transaction.commit().toPromise();
@@ -207,14 +207,14 @@ describe('ManagedTransaction', () => {
 
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj1 })
+                .insert(GuidClazz, { toSave: obj1 })
         );
 
         const obj2 = Object.assign({}, guidClazz);
 
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj2 })
+                .insert(GuidClazz, { toSave: obj2 })
         );
         const resultRollback = await transaction.rollback();
         expect(resultRollback).toEqual(true);
@@ -240,7 +240,7 @@ describe('ManagedTransaction', () => {
         const obj1 = Object.assign({}, guidClazz);
         transaction.add(
             crud
-                .insert(GuidClazz, { modelToSave: obj1 })
+                .insert(GuidClazz, { toSave: obj1 })
         );
         transaction.add(
             crud
@@ -253,14 +253,14 @@ describe('ManagedTransaction', () => {
         } as GuidClazz;
         transaction.add(
             crud
-                .update(GuidClazz, { modelToSave: modelUpdate })
+                .update(GuidClazz, { toSave: modelUpdate })
                 .where(where => where.equal(x => x.guid, obj1.guid))
         );
 
         const modelUpdateByDescription = new GuidClazz(void 0, 'Teste teste test');
         transaction.add(
             crud
-                .update(GuidClazz, { modelToSave: modelUpdateByDescription })
+                .update(GuidClazz, { toSave: modelUpdateByDescription })
                 .where(where => where.equal(x => x.description, modelUpdate.description))
         );
 

@@ -1,6 +1,6 @@
 // import { Injectable } from '@angular/core';
 // import { WebSqlObjectInterface, DatabaseResult, WebSqlTransactionInterface } from 'database-builder';
-// import { WebSqlDatabaseService } from 'ionic-database-builder';
+// import { WebSqlDatabaseService } from 'projects/ionic-database-builder/src/lib';
 
 // @Injectable()
 // export class TestWebSqlDatabaseService extends WebSqlDatabaseService {

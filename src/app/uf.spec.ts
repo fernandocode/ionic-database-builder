@@ -2,7 +2,8 @@ import { Uf } from './database/models/uf';
 import { TestBed, async } from '@angular/core/testing';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, DatabaseSettingsFactoryContract } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, DatabaseSettingsFactoryContract } from 'projects/ionic-database-builder/src/lib';
+import { DatabaseMigrationService } from './database/provider/database-migration-service';
 
 describe('Uf', () => {
   beforeEach(async(() => {
@@ -10,7 +11,11 @@ describe('Uf', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicDatabaseBuilderModule.forSimple()
+        IonicDatabaseBuilderModule.forRoot(
+          DatabaseSettingsFactory,
+          WebSqlDatabaseService,
+          DatabaseMigrationService
+        )
       ],
       providers: [
         TableMapper,
@@ -41,7 +46,7 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const insertResult = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
+    const insertResult = await crud.insert(Uf, { toSave: uf }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
   });
@@ -55,12 +60,12 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const insertResult = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
+    const insertResult = await crud.insert(Uf, { toSave: uf }).execute().toPromise();
     expect(insertResult[0].insertId).toBeGreaterThan(0);
     expect(insertResult[0].rowsAffected).toEqual(1);
 
     uf.nome = 'Nova Uf';
-    const updateResult = await crud.update(Uf, { modelToSave: uf })
+    const updateResult = await crud.update(Uf, { toSave: uf })
       .where(where => where.equal(x => x.codeImport, uf.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);
@@ -75,12 +80,12 @@ describe('Uf', () => {
 
     const uf: Uf = new Uf();
     uf.nome = 'Uf Test';
-    const result = await crud.insert(Uf, { modelToSave: uf }).execute().toPromise();
+    const result = await crud.insert(Uf, { toSave: uf }).execute().toPromise();
     expect(result[0].insertId).toBeGreaterThan(0);
     expect(result[0].rowsAffected).toEqual(1);
 
     uf.nome = 'Nova Uf';
-    const updateResult = await crud.update(Uf, { modelToSave: uf })
+    const updateResult = await crud.update(Uf, { toSave: uf })
       .where(where => where.equal(x => x.codeImport, uf.codeImport))
       .execute().toPromise();
     expect(updateResult[0].rowsAffected).toEqual(1);

@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { DatabaseMigrationService } from './database/provider/database-migration-service';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, WebSqlDatabaseService } from 'projects/ionic-database-builder/src/lib';
 import { Uf } from './database/models/uf';
 import { Regiao } from './database/models/regiao';
 import { SubRegiao } from './database/models/sub-regiao';
@@ -67,7 +67,7 @@ describe('Simple Test injector component', () => {
 
     await crud.delete(Cliente).execute().toPromise();
 
-    const insert = crud.insert(Cliente, { modelToSave: clienteToSave });
+    const insert = crud.insert(Cliente, { toSave: clienteToSave });
     const result = insert.compile();
     expect(result[0].params.toString()).toEqual([
       clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
@@ -87,21 +87,12 @@ describe('Simple Test injector component', () => {
 
   it('Test transaction mapper insert T', async () => {
     const database: Database = TestBed.get(Database);
-    const rollback = () => {
-      database.rollbackTransaction().toPromise().then().catch();
-    };
-    const crud = await database.beginTransaction().toPromise();
-    try {
-      const result = crud.insert(Cliente, { modelToSave: clienteToSave }).compile();
-      expect(result[0].params.toString()).toEqual([
-        clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
-        clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
-      ].toString());
-      expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
-      const commitResult = await database.commitTransaction().toPromise();
-      expect(commitResult).toEqual(true);
-    } catch (e) {
-      rollback();
-    }
+    const crud = await database.crud().toPromise();
+    const result = crud.insert(Cliente, { toSave: clienteToSave }).compile();
+    expect(result[0].params.toString()).toEqual([
+      clienteToSave.codeImport, clienteToSave.razaoSocial, clienteToSave.apelido,
+      clienteToSave.desativo, clienteToSave.cidade.codeImport, clienteToSave.classificacao.codeImport
+    ].toString());
+    expect(result[0].query).toEqual('INSERT INTO Cliente (codeImport, razaoSocial, apelido, desativo, cidade_codeImport, classificacao_codeImport) VALUES (?, ?, ?, ?, ?, ?)');
   });
 });

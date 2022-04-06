@@ -1,6 +1,6 @@
 {
   "name": "ionic-database-builder",
-  "version": "0.4.0",
+  "version": "0.6.0-alpha.1",
   "description": "Extended library from database-builder to assist in creating and maintaining SQL commands. Allowing integrate execute commands with SQLite ('@ionic-native/sqlite'), Web Sql, etc. Through the interface injection 'DatabaseCreatorContract' returning an implementation of 'DatabaseObject'.",
   "repository": {
     "type": "git",
@@ -34,8 +34,8 @@
   "homepage": "https://github.com/fernandocode/ionic-database-builder#readme",
   "dependencies": {},
   "peerDependencies": {
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0",
-    "database-builder": "0.5.0"
+    "@angular/common": "^10.0.0",
+    "@angular/core": "^10.0.0",
+    "database-builder": ">=0.6.0-alpha.4"
   }
 }

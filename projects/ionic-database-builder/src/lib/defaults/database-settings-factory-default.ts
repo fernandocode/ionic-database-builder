@@ -1,7 +1,8 @@
 import { GetMapper } from 'database-builder';
-import { Injector, Injectable } from '@angular/core';
+import { Injector } from '@angular/core';
 import { DatabaseSettingsModel } from '../model/database-settings-model';
 import { DatabaseSettingsFactoryContract } from '../utils';
+import { ConfigDatabase } from 'database-builder/src/crud/config-database';
 
 export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContract {
 
@@ -34,5 +35,11 @@ export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContr
 
     public mapper(): GetMapper {
         return this._model.mapper;
+    }
+
+    public config(injector: Injector): ConfigDatabase {
+        return {
+            sqliteLimitVariables: 999
+        }
     }
 }

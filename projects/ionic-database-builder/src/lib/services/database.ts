@@ -11,25 +11,29 @@ import { PlatformLoad } from '../utils/platform-load';
 @Injectable()
 export class Database extends BuildableDatabaseManager {
 
-    private _settings: DatabaseSettingsFactoryContract;
+    // private _settings: DatabaseSettingsFactoryContract;
 
     constructor(
         @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
         @Inject(IS_ENABLE_LOG) isEnableLog: boolean,
-        private _injector: Injector,
+        databaseSettings: DatabaseSettingsFactoryContract,
+        injector: Injector,
         databaseFactory: DatabaseFactoryContract,
         private _databaseMigration: DatabaseMigration,
         @Inject(PLATFORM_LOAD) platformLoad: PlatformLoad
     ) {
         super(
             databaseFactory,
+            databaseSettings,
+            injector,
+            databaseSettings.mapper(injector),
             // tslint:disable-next-line: deprecation
-            _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
+            // _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
             platformLoad,
             isEnableLog
         );
         // tslint:disable-next-line: deprecation
-        this._settings = _injector.get(DatabaseSettingsFactoryContract);
+        // this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
     protected migrationVersion(database: DatabaseObject, version: number): Observable<boolean> {
@@ -43,11 +47,11 @@ export class Database extends BuildableDatabaseManager {
     }
 
     protected databaseName(): string {
-        return this._settings.databaseName(this._injector);
+        return this._databaseSettings.databaseName(this._injector);
     }
 
     public version(): number {
-        return this._settings.version(this._injector);
+        return this._databaseSettings.version(this._injector);
     }
 
     public databaseNameFile(databaseName: string = this.databaseName()): string {

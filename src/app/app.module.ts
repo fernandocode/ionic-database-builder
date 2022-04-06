@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
-import { IonicDatabaseBuilderModule, WebSqlDatabaseService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, WebSqlDatabaseService } from 'projects/ionic-database-builder/src/lib';
 
 @NgModule({
   declarations: [

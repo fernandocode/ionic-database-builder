@@ -1,7 +1,7 @@
 import { GetMapper, DatabaseObject } from 'database-builder';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DatabaseMigrationContract, DatabaseResettableContract, Version } from 'ionic-database-builder';
+import { DatabaseMigrationContract, DatabaseResettableContract, Version } from 'projects/ionic-database-builder/src/lib';
 
 @Injectable()
 export class DatabaseMigrationService extends DatabaseMigrationContract {

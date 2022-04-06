@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Database } from 'ionic-database-builder';
+import { Database } from 'projects/ionic-database-builder/src/lib';
 
 @Component({
   selector: 'app-root',

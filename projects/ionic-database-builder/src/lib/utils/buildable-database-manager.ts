@@ -1,4 +1,4 @@
-import { DatabaseBaseTransaction, DatabaseResult, DatabaseBuilderError } from 'database-builder';
+import { DatabaseResult, DatabaseBuilderError } from 'database-builder';
 import { DatabaseManager } from './database-manager';
 import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
 import { DatabaseFactoryContract } from './database-factory-contract';
@@ -6,11 +6,15 @@ import { Observable, Observer, from, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { PlatformLoad } from './platform-load';
 import { ManagedTransaction } from 'database-builder/src/transaction/managed-transaction';
+import { DatabaseSettingsFactoryContract } from './database-settings-factory-contract';
+import { Injector } from '@angular/core';
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
     constructor(
         databaseFactory: DatabaseFactoryContract,
+        protected  _databaseSettings: DatabaseSettingsFactoryContract,
+        protected _injector: Injector,
         private _mapper: GetMapper,
         platformLoad: PlatformLoad,
         public enableLog: boolean = true
@@ -39,107 +43,107 @@ export abstract class BuildableDatabaseManager extends DatabaseManager {
         }));
     }
 
-    /**
-     * @deprecated Use managedTransaction()
-     */
-    public newTransaction(successTransaction: () => void): Observable<DatabaseBaseTransaction> {
-        return new Observable((observer: Observer<DatabaseBaseTransaction>) => {
-            this.databaseInstance()
-                .then(database => {
-                    database.transaction((result: DatabaseBaseTransaction) => {
-                        observer.next(result);
-                        observer.complete();
-                    })
-                        .then(x => {
-                            successTransaction();
-                        })
-                        .catch(error => {
-                            observer.error(error);
-                            observer.complete();
-                        });
-                })
-                .catch(err => {
-                    observer.error(err);
-                    observer.complete();
-                });
-        });
-    }
+    // /**
+    //  * @deprecated Use managedTransaction()
+    //  */
+    // public newTransaction(successTransaction: () => void): Observable<DatabaseBaseTransaction> {
+    //     return new Observable((observer: Observer<DatabaseBaseTransaction>) => {
+    //         this.databaseInstance()
+    //             .then(database => {
+    //                 database.transaction((result: DatabaseBaseTransaction) => {
+    //                     observer.next(result);
+    //                     observer.complete();
+    //                 })
+    //                     .then(x => {
+    //                         successTransaction();
+    //                     })
+    //                     .catch(error => {
+    //                         observer.error(error);
+    //                         observer.complete();
+    //                     });
+    //             })
+    //             .catch(err => {
+    //                 observer.error(err);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
-    /**
-     * @deprecated Use managedTransaction()
-     */
-    public transaction(successTransaction: () => void): Observable<Crud> {
-        return new Observable((observer: Observer<Crud>) => {
-            this.newTransaction(successTransaction)
-                .subscribe((transaction) => {
-                    observer.next(new Crud({ database: transaction, getMapper: this._mapper, enableLog: this.enableLog }));
-                    observer.complete();
-                }, error => {
-                    observer.error(error);
-                    observer.complete();
-                });
-        });
-    }
+    // /**
+    //  * @deprecated Use managedTransaction()
+    //  */
+    // public transaction(successTransaction: () => void): Observable<Crud> {
+    //     return new Observable((observer: Observer<Crud>) => {
+    //         this.newTransaction(successTransaction)
+    //             .subscribe((transaction) => {
+    //                 observer.next(new Crud({ database: transaction, getMapper: this._mapper, enableLog: this.enableLog }));
+    //                 observer.complete();
+    //             }, error => {
+    //                 observer.error(error);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
-    /**
-     * @deprecated Use managedTransaction()
-     */
-    public beginTransaction(): Observable<Crud> {
-        return new Observable((observer: Observer<Crud>) => {
-            this.sql('BEGIN TRANSACTION')
-                .subscribe(r => {
-                    this.crud()
-                        .subscribe(crud => {
-                            observer.next(crud);
-                            observer.complete();
-                        }, error => {
-                            observer.error(error);
-                            observer.complete();
-                        });
-                }, error => {
-                    observer.error(error);
-                    observer.complete();
-                });
-        });
-    }
+    // /**
+    //  * @deprecated Use managedTransaction()
+    //  */
+    // public beginTransaction(): Observable<Crud> {
+    //     return new Observable((observer: Observer<Crud>) => {
+    //         this.sql('BEGIN TRANSACTION')
+    //             .subscribe(r => {
+    //                 this.crud()
+    //                     .subscribe(crud => {
+    //                         observer.next(crud);
+    //                         observer.complete();
+    //                     }, error => {
+    //                         observer.error(error);
+    //                         observer.complete();
+    //                     });
+    //             }, error => {
+    //                 observer.error(error);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
-    /**
-     * @deprecated Use managedTransaction()
-     */
-    public commitTransaction(): Observable<boolean> {
-        return new Observable((observer: Observer<boolean>) => {
-            this.sql('COMMIT')
-                .subscribe(r => {
-                    observer.next(true);
-                    observer.complete();
-                }, error => {
-                    observer.error(error);
-                    observer.complete();
-                });
-        });
-    }
+    // /**
+    //  * @deprecated Use managedTransaction()
+    //  */
+    // public commitTransaction(): Observable<boolean> {
+    //     return new Observable((observer: Observer<boolean>) => {
+    //         this.sql('COMMIT')
+    //             .subscribe(r => {
+    //                 observer.next(true);
+    //                 observer.complete();
+    //             }, error => {
+    //                 observer.error(error);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
-    /**
-     * @deprecated Use managedTransaction()
-     */
-    public rollbackTransaction(): Observable<boolean> {
-        return new Observable((observer: Observer<boolean>) => {
-            this.sql('ROLLBACK')
-                .subscribe(r => {
-                    observer.next(true);
-                    observer.complete();
-                }, error => {
-                    observer.error(error);
-                    observer.complete();
-                });
-        });
-    }
+    // /**
+    //  * @deprecated Use managedTransaction()
+    //  */
+    // public rollbackTransaction(): Observable<boolean> {
+    //     return new Observable((observer: Observer<boolean>) => {
+    //         this.sql('ROLLBACK')
+    //             .subscribe(r => {
+    //                 observer.next(true);
+    //                 observer.complete();
+    //             }, error => {
+    //                 observer.error(error);
+    //                 observer.complete();
+    //             });
+    //     });
+    // }
 
     public crud(): Observable<Crud> {
         return new Observable((observer: Observer<Crud>) => {
             this.databaseInstance()
                 .then(database => {
-                    observer.next(new Crud({ database, getMapper: this._mapper, enableLog: this.enableLog }));
+                    observer.next(new Crud(this._databaseSettings.config(this._injector), { database, getMapper: this._mapper, enableLog: this.enableLog }));
                     observer.complete();
                 })
                 .catch(error => { observer.error(error); observer.complete(); });

@@ -1,5 +1,5 @@
 import { DatabaseCreatorContract } from 'database-builder';
-import { Type, ModuleWithProviders, NgModule, SkipSelf, Optional } from '@angular/core';
+import { Type, NgModule, SkipSelf, Optional } from '@angular/core';
 import { DatabaseMigrationContract } from './services/database-migration-contract';
 import { DatabaseSettingsFactoryContract } from './utils/database-settings-factory-contract';
 import {
@@ -37,11 +37,12 @@ export class IonicDatabaseBuilderModule {
     }
   }
 
+  /** @deprecated use forRoot */
   public static forSimple(
     isEnableLogProvider: boolean = false,
     isAvailableProvider: boolean = true,
     platformLoad: Type<PlatformLoad> = PlatformLoadDefault
-  ): ModuleWithProviders {
+  ) {
     return {
       ngModule: IonicDatabaseBuilderModule,
       providers: [
@@ -59,7 +60,7 @@ export class IonicDatabaseBuilderModule {
     platformLoad: Type<PlatformLoad> = PlatformLoadDefault,
     isEnableLogProvider: boolean = false,
     isAvailableProvider: boolean = true,
-  ): ModuleWithProviders {
+  ) {
     return {
       ngModule: IonicDatabaseBuilderModule,
       providers: [

@@ -2,7 +2,8 @@ import { GetMapper } from 'database-builder';
 
 import { Injector, Injectable } from '@angular/core';
 import { TableMapper } from '../mapper/table-mapper';
-import { DatabaseSettingsFactoryContract } from 'ionic-database-builder';
+import { DatabaseSettingsFactoryContract } from 'projects/ionic-database-builder/src/lib';
+import { ConfigDatabase } from 'database-builder/src/crud/config-database';
 
 @Injectable()
 export class DatabaseSettingsFactory extends DatabaseSettingsFactoryContract {
@@ -17,6 +18,12 @@ export class DatabaseSettingsFactory extends DatabaseSettingsFactoryContract {
 
     mapper(injector: Injector): GetMapper {
         return injector.get(TableMapper);
+    }
+
+    public config(injector: Injector): ConfigDatabase {
+        return {
+            sqliteLimitVariables: 999
+        }
     }
 
 }

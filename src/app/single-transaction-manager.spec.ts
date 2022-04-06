@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { DatabaseSettingsFactory } from './database/factory/database-settings-factory';
 import { TableMapper } from './database/mapper/table-mapper';
-import { IonicDatabaseBuilderModule, Database, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, WebSqlDatabaseService } from 'ionic-database-builder';
+import { IonicDatabaseBuilderModule, Database, IS_ENABLE_LOG, DATABASE_CREATOR, DatabaseMockService, WebSqlDatabaseService } from 'projects/ionic-database-builder/src/lib';
 import { DatabaseMigrationService } from './database/provider/database-migration-service';
 import { GuidClazz } from './database/models/guid-clazz';
 import { Observable } from 'rxjs';
@@ -69,7 +69,7 @@ describe('Single Transaction Manager', () => {
             } as GuidClazz;
             transaction.add(
                 crud
-                    .insert(GuidClazz, { modelToSave: obj1 })
+                    .insert(GuidClazz, { toSave: obj1 })
             );
             observers.push(transaction.commit());
         }
