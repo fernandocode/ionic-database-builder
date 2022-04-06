@@ -62,7 +62,7 @@ describe('Simple Test injector component', () => {
   } as Cliente;
 
   it('Test mapper insert T', async () => {
-    const database: Database = TestBed.get(Database);
+    const database: Database = TestBed.inject(Database);
     const crud = await database.crud().toPromise();
 
     await crud.delete(Cliente).execute().toPromise();
@@ -86,7 +86,7 @@ describe('Simple Test injector component', () => {
   });
 
   it('Test transaction mapper insert T', async () => {
-    const database: Database = TestBed.get(Database);
+    const database: Database = TestBed.inject(Database);
     const crud = await database.crud().toPromise();
     const result = crud.insert(Cliente, { toSave: clienteToSave }).compile();
     expect(result[0].params.toString()).toEqual([

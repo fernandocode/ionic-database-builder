@@ -37,7 +37,7 @@ describe('Cidade', () => {
   }));
 
   it('insert', async () => {
-    const database: Database = TestBed.get(Database);
+    const database: Database = TestBed.inject(Database);
     expect(database).toBeTruthy();
     const crud = await database.crud().toPromise();
 
@@ -51,7 +51,7 @@ describe('Cidade', () => {
   });
 
   it('update', async () => {
-    const database: Database = TestBed.get(Database);
+    const database: Database = TestBed.inject(Database);
     expect(database).toBeTruthy();
     const crud = await database.crud().toPromise();
 
@@ -71,7 +71,7 @@ describe('Cidade', () => {
   });
 
   it('read', async () => {
-    const database: Database = TestBed.get(Database);
+    const database: Database = TestBed.inject(Database);
     expect(database).toBeTruthy();
     const crud = await database.crud().toPromise();
 

@@ -61,7 +61,7 @@
 //   } as Cliente;
 
 //   it('batch simple', async () => {
-//     const database: Database = TestBed.get(Database);
+//     const database: Database = TestBed.inject(Database);
 
 //     console.log('database ::: ', database);
 
@@ -91,7 +91,7 @@
 //   });
 
 // //   it('Test transaction mapper insert T', async () => {
-// //     const database: Database = TestBed.get(Database);
+// //     const database: Database = TestBed.inject(Database);
 // //     const rollback = () => {
 // //       database.rollbackTransaction().toPromise().then().catch();
 // //     };

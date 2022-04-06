@@ -64,7 +64,7 @@ describe('Migration test', () => {
     } as Cliente;
 
     it('Test mapper insert T', async () => {
-        const migrationFlow: MigrationFlowService = TestBed.get(MigrationFlowService);
+        const migrationFlow: MigrationFlowService = TestBed.inject(MigrationFlowService);
 
         let wasStarted: boolean = false;
         migrationFlow.$statusEvent.subscribe((status: MigrationStatus) => {
@@ -74,7 +74,7 @@ describe('Migration test', () => {
             // console.log(`update status: ${status === MigrationStatus.Started ? 'Started' : 'Finished'}`);
         });
 
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
 
         expect(migrationFlow.status).toBeUndefined();
         const crud = await database.crud().toPromise();

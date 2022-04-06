@@ -41,7 +41,7 @@ describe('ManagedTransaction', () => {
     }));
 
     afterEach(async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const crud = await database.crud().toPromise();
@@ -49,7 +49,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction Test', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const crud = await database.crud().toPromise();
@@ -64,7 +64,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction Simple', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();
@@ -106,7 +106,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction inactive', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();
@@ -130,7 +130,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction get guid id', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();
@@ -155,7 +155,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction_error', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();
@@ -197,7 +197,7 @@ describe('ManagedTransaction', () => {
     });
 
     it('Transaction rollback', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();
@@ -231,7 +231,7 @@ describe('ManagedTransaction', () => {
      * OK
      */
     it('Transaction deny query', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const transaction = await database.managedTransaction().toPromise();

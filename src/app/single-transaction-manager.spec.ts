@@ -44,7 +44,7 @@ describe('Single Transaction Manager', () => {
     }));
 
     afterEach(async(async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const crud = await database.crud().toPromise();
@@ -54,7 +54,7 @@ describe('Single Transaction Manager', () => {
     }));
 
     it('Check execute multiple transaction sequentially', async () => {
-        const database: Database = TestBed.get(Database);
+        const database: Database = TestBed.inject(Database);
         expect(database).toBeTruthy();
 
         const crud = await database.crud().toPromise();
