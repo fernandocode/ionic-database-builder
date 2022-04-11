@@ -1,4 +1,4 @@
-import { GetMapper } from 'database-builder';
+import { DatabaseObject, GetMapper } from 'database-builder';
 
 import { Injector, Injectable } from '@angular/core';
 import { TableMapper } from '../mapper/table-mapper';
@@ -20,10 +20,10 @@ export class DatabaseSettingsFactory extends DatabaseSettingsFactoryContract {
         return injector.get(TableMapper);
     }
 
-    public config(injector: Injector): ConfigDatabase {
-        return {
+    public config(injector: Injector, database: DatabaseObject): Promise<ConfigDatabase> {
+        return Promise.resolve({
             sqliteLimitVariables: 999
-        }
+        });
     }
 
 }

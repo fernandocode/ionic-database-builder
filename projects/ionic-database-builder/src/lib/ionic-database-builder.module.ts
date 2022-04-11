@@ -37,7 +37,6 @@ export class IonicDatabaseBuilderModule {
     }
   }
 
-  /** @deprecated use forRoot */
 public static forSimple(isEnableLogProvider: boolean = false, isAvailableProvider: boolean = true, platformLoad: Type<PlatformLoad> = PlatformLoadDefault): ModuleWithProviders<IonicDatabaseBuilderModule> {
     return {
         ngModule: IonicDatabaseBuilderModule,

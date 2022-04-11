@@ -1,4 +1,4 @@
-import { GetMapper } from 'database-builder';
+import { DatabaseObject, GetMapper } from 'database-builder';
 import { Injector } from '@angular/core';
 import { DatabaseSettingsModel } from '../model/database-settings-model';
 import { DatabaseSettingsFactoryContract } from '../utils';
@@ -37,9 +37,9 @@ export class DatabaseSettingsFactoryDefault extends DatabaseSettingsFactoryContr
         return this._model.mapper;
     }
 
-    public config(injector: Injector): ConfigDatabase {
-        return {
+    public config(injector: Injector, database: DatabaseObject): Promise<ConfigDatabase> {
+        return Promise.resolve({
             sqliteLimitVariables: 999
-        }
+        });
     }
 }

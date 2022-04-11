@@ -11,8 +11,6 @@ import { PlatformLoad } from '../utils/platform-load';
 @Injectable()
 export class Database extends BuildableDatabaseManager {
 
-    // private _settings: DatabaseSettingsFactoryContract;
-
     constructor(
         @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
         @Inject(IS_ENABLE_LOG) isEnableLog: boolean,
@@ -27,13 +25,9 @@ export class Database extends BuildableDatabaseManager {
             databaseSettings,
             injector,
             databaseSettings.mapper(injector),
-            // tslint:disable-next-line: deprecation
-            // _injector.get(DatabaseSettingsFactoryContract).mapper(_injector),
             platformLoad,
             isEnableLog
         );
-        // tslint:disable-next-line: deprecation
-        // this._settings = _injector.get(DatabaseSettingsFactoryContract);
     }
 
     protected migrationVersion(database: DatabaseObject, version: number): Observable<boolean> {
