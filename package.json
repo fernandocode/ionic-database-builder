@@ -33,7 +33,7 @@
     "@angular-devkit/build-angular": "^0.1000.8",
     "@angular-devkit/build-ng-packagr": "^0.1000.8",
     "@angular-devkit/schematics": "^10.2.4",
-    "@angular/cli": "~10.2.4",
+    "@angular/cli": "~15.1.4",
     "@angular/compiler-cli": "~10.2.5",
     "@angular/language-service": "~10.2.5",
     "@types/jasmine": "~4.0.2",
